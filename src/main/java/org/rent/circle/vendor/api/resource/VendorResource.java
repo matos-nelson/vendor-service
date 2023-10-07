@@ -30,8 +30,9 @@ public class VendorResource {
     }
 
     @PATCH
-    @Path("/{id}")
-    public void updateVendor(@NotNull @PathParam("id") long vendorId, @NotNull @Valid UpdateVendorDto updateVendorInfo) {
-        vendorService.updateVendorInfo(vendorId, updateVendorInfo);
+    @Path("/{id}/owner/{ownerId}")
+    public void updateVendor(@NotNull @PathParam("id") long vendorId, @NotNull @PathParam("ownerId") long ownerId,
+        @NotNull @Valid UpdateVendorDto updateVendorInfo) {
+        vendorService.updateVendorInfo(vendorId, ownerId, updateVendorInfo);
     }
 }
