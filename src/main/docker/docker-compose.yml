@@ -1,0 +1,30 @@
+version: '3.8'
+
+name: vendor-container
+services:
+  app:
+    image: 'quarkus/vendor-service'
+    container_name: "vendor-app"
+    ports:
+      - '8080:8080'
+    links:
+      - "mysql-db"
+    environment:
+      - DB_USER=root
+      - DB_PWD=root
+      - DB_URL=jdbc:mysql://mysql-db/vendor
+
+  mysql-db:
+    image: mysql:8.0
+    container_name: "mysql-db"
+    environment:
+      - MYSQL_DATABASE=vendor
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - '3306:3306'
+    volumes:
+      - vendor:/var/lib/mysql
+      - ./../../../db/sql/create_vendor_schemas.sql:/docker-entrypoint-initdb.d/create_vendor_schemas.sql
+volumes:
+  vendor:
+    driver: local
