@@ -71,7 +71,6 @@ public class VendorResourceTest {
     public void PATCH_WhenGivenRequestToUpdateVendorFailsValidation_ShouldReturnBadRequest() {
         // Arrange
         long vendorId = 300L;
-        long ownerId = 400L;
         UpdateVendorDto updateVendorDto = UpdateVendorDto.builder()
             .build();
 
@@ -81,7 +80,7 @@ public class VendorResourceTest {
             .contentType("application/json")
             .body(updateVendorDto)
             .when()
-            .patch("/" + vendorId + "/owner/" + ownerId)
+            .patch("/" + vendorId)
             .then()
             .statusCode(HttpStatus.SC_BAD_REQUEST);
     }
@@ -90,7 +89,6 @@ public class VendorResourceTest {
     public void PATCH_WhenGivenAValidRequestToUpdateVendor_ShouldReturnNoContent() {
         // Arrange
         long vendorId = 100L;
-        long ownerId = 200L;
         UpdateVendorDto updateVendorDto = UpdateVendorDto.builder()
             .phone("9999999999")
             .name("New Name")
@@ -103,7 +101,7 @@ public class VendorResourceTest {
             .contentType("application/json")
             .body(updateVendorDto)
             .when()
-            .patch("/" + vendorId + "/owner/" + ownerId)
+            .patch("/" + vendorId)
             .then()
             .statusCode(HttpStatus.SC_NO_CONTENT);
     }

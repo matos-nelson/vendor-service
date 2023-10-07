@@ -27,8 +27,8 @@ public class VendorService {
     }
 
     @Transactional
-    public void updateVendorInfo(Long vendorId, Long ownerId, UpdateVendorDto updateVendorInfo) {
-        Vendor vendor = vendorRepository.findVendor(vendorId, ownerId);
+    public void updateVendorInfo(Long vendorId, UpdateVendorDto updateVendorInfo) {
+        Vendor vendor = vendorRepository.findById(vendorId);
         if (vendor == null) {
             return;
         }
