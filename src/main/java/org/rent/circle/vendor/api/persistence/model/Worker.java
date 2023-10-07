@@ -19,7 +19,7 @@ public class Worker extends BaseModel {
     @Id
     private Long id;
 
-    @Column(name = "vendor_id")
+    @Column(name = "vendor_id", insertable = false, updatable = false, nullable = false)
     private Long vendorId;
 
     @Column(name = "name")
