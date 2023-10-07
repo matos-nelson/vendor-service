@@ -1,0 +1,1 @@
+insert into resident(id, owner_id, address_id, name, email, phone) values (100, 200, 300, 'Update Resident', 'updateresidenttest@email.com', '1231234444');
