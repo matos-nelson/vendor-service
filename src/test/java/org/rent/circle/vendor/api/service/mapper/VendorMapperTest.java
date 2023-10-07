@@ -55,7 +55,6 @@ public class VendorMapperTest {
     @Test
     public void toModel_WhenGivenASaveVendorDtoWithWorkers_ShouldMap() {
         // Arrange
-
         SaveWorkerDto saveWorkerDto = SaveWorkerDto.builder()
             .email("create@worker.com")
             .name("Create Worker")

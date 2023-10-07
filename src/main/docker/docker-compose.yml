@@ -8,15 +8,15 @@ services:
     ports:
       - '8080:8080'
     links:
-      - "mysql-db"
+      - "vendor-db"
     environment:
       - DB_USER=root
       - DB_PWD=root
       - DB_URL=jdbc:mysql://mysql-db/vendor
 
-  mysql-db:
+  vendor-db:
     image: mysql:8.0
-    container_name: "mysql-db"
+    container_name: "vendor-db"
     environment:
       - MYSQL_DATABASE=vendor
       - MYSQL_ROOT_PASSWORD=root
