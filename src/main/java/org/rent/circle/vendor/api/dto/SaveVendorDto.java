@@ -16,7 +16,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateVendorDto {
+public class SaveVendorDto {
 
     @NotNull
     private Long ownerId;

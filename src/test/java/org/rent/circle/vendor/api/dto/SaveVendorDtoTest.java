@@ -5,7 +5,7 @@ import org.force66.beantester.BeanTester;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
-public class CreateVendorDtoTest {
+public class SaveVendorDtoTest {
 
     @Test
     public void CreateVendorDto_SettersAndGetters_ShouldWork() {
@@ -13,7 +13,7 @@ public class CreateVendorDtoTest {
         BeanTester beanTester = new BeanTester();
 
         // Act
-        beanTester.testBean(CreateVendorDto.class);
+        beanTester.testBean(SaveVendorDto.class);
 
         // Assert
     }

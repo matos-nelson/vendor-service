@@ -4,7 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.rent.circle.vendor.api.dto.CreateVendorDto;
+import org.rent.circle.vendor.api.dto.SaveVendorDto;
 import org.rent.circle.vendor.api.persistence.model.Vendor;
 import org.rent.circle.vendor.api.persistence.repository.VendorRepository;
 import org.rent.circle.vendor.api.service.mapper.VendorMapper;
@@ -18,8 +18,8 @@ public class VendorService {
     private final VendorMapper vendorMapper;
 
     @Transactional
-    public Long saveVendor(CreateVendorDto createVendor) {
-        Vendor vendor = vendorMapper.toModel(createVendor);
+    public Long saveVendor(SaveVendorDto saveVendor) {
+        Vendor vendor = vendorMapper.toModel(saveVendor);
 
         vendorRepository.persist(vendor);
         return vendor.getId();

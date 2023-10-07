@@ -8,8 +8,8 @@ import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import java.util.Collections;
 import org.junit.jupiter.api.Test;
-import org.rent.circle.vendor.api.dto.CreateVendorDto;
 import org.rent.circle.vendor.api.dto.CreateWorkerDto;
+import org.rent.circle.vendor.api.dto.SaveVendorDto;
 import org.rent.circle.vendor.api.persistence.model.Vendor;
 
 @QuarkusTest
@@ -30,9 +30,9 @@ public class VendorMapperTest {
     }
 
     @Test
-    public void toModel_WhenGivenACreateVendorDto_ShouldMap() {
+    public void toModel_WhenGivenASaveVendorDto_ShouldMap() {
         // Arrange
-        CreateVendorDto createVendorDto = CreateVendorDto.builder()
+        SaveVendorDto saveVendorDto = SaveVendorDto.builder()
             .addressId(1L)
             .email("create@vender.com")
             .name("Create Vendor")
@@ -41,19 +41,19 @@ public class VendorMapperTest {
             .build();
 
         // Act
-        Vendor result = vendorMapper.toModel(createVendorDto);
+        Vendor result = vendorMapper.toModel(saveVendorDto);
 
         // Assert
         assertNotNull(result);
-        assertEquals(createVendorDto.getAddressId(), result.getAddressId());
-        assertEquals(createVendorDto.getOwnerId(), result.getOwnerId());
-        assertEquals(createVendorDto.getEmail(), result.getEmail());
-        assertEquals(createVendorDto.getName(), result.getName());
-        assertEquals(createVendorDto.getPhone(), result.getPhone());
+        assertEquals(saveVendorDto.getAddressId(), result.getAddressId());
+        assertEquals(saveVendorDto.getOwnerId(), result.getOwnerId());
+        assertEquals(saveVendorDto.getEmail(), result.getEmail());
+        assertEquals(saveVendorDto.getName(), result.getName());
+        assertEquals(saveVendorDto.getPhone(), result.getPhone());
     }
 
     @Test
-    public void toModel_WhenGivenACreateVendorDtoWithWorkers_ShouldMap() {
+    public void toModel_WhenGivenASaveVendorDtoWithWorkers_ShouldMap() {
         // Arrange
 
         CreateWorkerDto createWorkerDto = CreateWorkerDto.builder()
@@ -62,7 +62,7 @@ public class VendorMapperTest {
             .phone("4561237890")
             .build();
 
-        CreateVendorDto createVendorDto = CreateVendorDto.builder()
+        SaveVendorDto saveVendorDto = SaveVendorDto.builder()
             .addressId(1L)
             .email("create@vender.com")
             .name("Create Vendor")
@@ -72,18 +72,18 @@ public class VendorMapperTest {
             .build();
 
         // Act
-        Vendor result = vendorMapper.toModel(createVendorDto);
+        Vendor result = vendorMapper.toModel(saveVendorDto);
 
         // Assert
         assertNotNull(result);
-        assertEquals(createVendorDto.getAddressId(), result.getAddressId());
-        assertEquals(createVendorDto.getOwnerId(), result.getOwnerId());
-        assertEquals(createVendorDto.getEmail(), result.getEmail());
-        assertEquals(createVendorDto.getName(), result.getName());
-        assertEquals(createVendorDto.getPhone(), result.getPhone());
-        assertEquals(createVendorDto.getWorkers().size(), result.getWorkers().size());
-        assertEquals(createVendorDto.getWorkers().get(0).getEmail(), result.getWorkers().get(0).getEmail());
-        assertEquals(createVendorDto.getWorkers().get(0).getName(), result.getWorkers().get(0).getName());
-        assertEquals(createVendorDto.getWorkers().get(0).getPhone(), result.getWorkers().get(0).getPhone());
+        assertEquals(saveVendorDto.getAddressId(), result.getAddressId());
+        assertEquals(saveVendorDto.getOwnerId(), result.getOwnerId());
+        assertEquals(saveVendorDto.getEmail(), result.getEmail());
+        assertEquals(saveVendorDto.getName(), result.getName());
+        assertEquals(saveVendorDto.getPhone(), result.getPhone());
+        assertEquals(saveVendorDto.getWorkers().size(), result.getWorkers().size());
+        assertEquals(saveVendorDto.getWorkers().get(0).getEmail(), result.getWorkers().get(0).getEmail());
+        assertEquals(saveVendorDto.getWorkers().get(0).getName(), result.getWorkers().get(0).getName());
+        assertEquals(saveVendorDto.getWorkers().get(0).getPhone(), result.getWorkers().get(0).getPhone());
     }
 }

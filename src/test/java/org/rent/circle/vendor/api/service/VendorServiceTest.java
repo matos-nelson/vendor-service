@@ -8,7 +8,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
-import org.rent.circle.vendor.api.dto.CreateVendorDto;
+import org.rent.circle.vendor.api.dto.SaveVendorDto;
 import org.rent.circle.vendor.api.persistence.model.Vendor;
 import org.rent.circle.vendor.api.persistence.repository.VendorRepository;
 import org.rent.circle.vendor.api.service.mapper.VendorMapper;
@@ -28,16 +28,16 @@ public class VendorServiceTest {
     @Test
     public void saveVendor_WhenCalled_ShouldReturnSavedVendorId() {
         // Arrange
-        CreateVendorDto createVendorDto = CreateVendorDto.builder()
+        SaveVendorDto saveVendorDto = SaveVendorDto.builder()
             .ownerId(1L)
             .build();
 
         Vendor vendor = new Vendor();
         vendor.setId(100L);
-        when(vendorMapper.toModel(createVendorDto)).thenReturn(vendor);
+        when(vendorMapper.toModel(saveVendorDto)).thenReturn(vendor);
 
         // Act
-        Long result = vendorService.saveVendor(createVendorDto);
+        Long result = vendorService.saveVendor(saveVendorDto);
 
         // Assert
         assertNotNull(result);
