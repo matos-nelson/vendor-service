@@ -10,6 +10,7 @@ import java.util.Collections;
 import org.junit.jupiter.api.Test;
 import org.rent.circle.vendor.api.dto.SaveVendorDto;
 import org.rent.circle.vendor.api.dto.SaveWorkerDto;
+import org.rent.circle.vendor.api.dto.UpdateVendorDto;
 import org.rent.circle.vendor.api.persistence.model.Vendor;
 
 @QuarkusTest
@@ -85,4 +86,48 @@ public class VendorMapperTest {
         assertEquals(saveVendorDto.getWorkers().get(0).getName(), result.getWorkers().get(0).getName());
         assertEquals(saveVendorDto.getWorkers().get(0).getPhone(), result.getWorkers().get(0).getPhone());
     }
+
+    @Test
+    public void updateVendor_WhenGivenNullUpdateVendorResidentDto_ShouldReturnNull() {
+        // Arrange
+        Vendor vendor = new Vendor();
+        vendor.setOwnerId(1L);
+        vendor.setAddressId(2L);
+        vendor.setName("Simple Test");
+        vendor.setEmail("simpletest@email.com");
+        vendor.setPhone("1234567890");
+
+        // Act
+        vendorMapper.updateVendor(null, vendor);
+
+        // Assert
+        assertNotNull(vendor);
+    }
+
+    @Test
+    public void update_WhenGivenAnUpdateVendorDto_ShouldMap() {
+        // Arrange
+        Vendor vendor = new Vendor();
+        vendor.setOwnerId(1L);
+        vendor.setAddressId(2L);
+        vendor.setName("Simple Test");
+        vendor.setEmail("simpletest@email.com");
+        vendor.setPhone("1234567890");
+
+        UpdateVendorDto updateVendor = UpdateVendorDto.builder()
+            .name("Updated Name")
+            .email("updated@email.com")
+            .phone("9876543210")
+            .build();
+
+        // Act
+        vendorMapper.updateVendor(updateVendor, vendor);
+
+        // Assert
+        assertNotNull(vendor);
+        assertEquals(updateVendor.getName(), vendor.getName());
+        assertEquals(updateVendor.getEmail(), vendor.getEmail());
+        assertEquals(updateVendor.getPhone(), vendor.getPhone());
+    }
+
 }

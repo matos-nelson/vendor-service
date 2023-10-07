@@ -12,6 +12,7 @@ import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;
 import org.rent.circle.vendor.api.dto.SaveVendorDto;
 import org.rent.circle.vendor.api.dto.SaveWorkerDto;
+import org.rent.circle.vendor.api.dto.UpdateVendorDto;
 
 @QuarkusTest
 @TestHTTPEndpoint(VendorResource.class)
@@ -64,5 +65,44 @@ public class VendorResourceTest {
             .post()
             .then()
             .statusCode(HttpStatus.SC_BAD_REQUEST);
+    }
+
+    @Test
+    public void PATCH_WhenGivenRequestToUpdateVendorFailsValidation_ShouldReturnBadRequest() {
+        // Arrange
+        long vendorId = 300L;
+        UpdateVendorDto updateVendorDto = UpdateVendorDto.builder()
+            .build();
+
+        // Act
+        // Assert
+        given()
+            .contentType("application/json")
+            .body(updateVendorDto)
+            .when()
+            .patch("/" + vendorId)
+            .then()
+            .statusCode(HttpStatus.SC_BAD_REQUEST);
+    }
+
+    @Test
+    public void PATCH_WhenGivenAValidRequestToUpdateVendor_ShouldReturnNoContent() {
+        // Arrange
+        long vendorId = 100L;
+        UpdateVendorDto updateVendorDto = UpdateVendorDto.builder()
+            .phone("9999999999")
+            .name("New Name")
+            .email("new@email.com")
+            .build();
+
+        // Act
+        // Assert
+        given()
+            .contentType("application/json")
+            .body(updateVendorDto)
+            .when()
+            .patch("/" + vendorId)
+            .then()
+            .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 }

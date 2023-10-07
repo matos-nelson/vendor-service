@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.rent.circle.vendor.api.dto.SaveVendorDto;
+import org.rent.circle.vendor.api.dto.UpdateVendorDto;
 import org.rent.circle.vendor.api.persistence.model.Vendor;
 import org.rent.circle.vendor.api.persistence.repository.VendorRepository;
 import org.rent.circle.vendor.api.service.mapper.VendorMapper;
@@ -23,5 +24,16 @@ public class VendorService {
 
         vendorRepository.persist(vendor);
         return vendor.getId();
+    }
+
+    @Transactional
+    public void updateVendorInfo(Long vendorId, UpdateVendorDto updateVendorInfo) {
+        Vendor vendor = vendorRepository.findById(vendorId);
+        if (vendor == null) {
+            return;
+        }
+
+        vendorMapper.updateVendor(updateVendorInfo, vendor);
+        vendorRepository.persist(vendor);
     }
 }
