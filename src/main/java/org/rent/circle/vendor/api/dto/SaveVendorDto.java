@@ -36,5 +36,5 @@ public class SaveVendorDto {
 
     @NotNull
     @NotEmpty
-    private List<CreateWorkerDto> workers;
+    private List<SaveWorkerDto> workers;
 }

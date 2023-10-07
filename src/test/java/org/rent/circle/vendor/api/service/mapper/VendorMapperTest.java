@@ -8,8 +8,8 @@ import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import java.util.Collections;
 import org.junit.jupiter.api.Test;
-import org.rent.circle.vendor.api.dto.CreateWorkerDto;
 import org.rent.circle.vendor.api.dto.SaveVendorDto;
+import org.rent.circle.vendor.api.dto.SaveWorkerDto;
 import org.rent.circle.vendor.api.persistence.model.Vendor;
 
 @QuarkusTest
@@ -56,7 +56,7 @@ public class VendorMapperTest {
     public void toModel_WhenGivenASaveVendorDtoWithWorkers_ShouldMap() {
         // Arrange
 
-        CreateWorkerDto createWorkerDto = CreateWorkerDto.builder()
+        SaveWorkerDto saveWorkerDto = SaveWorkerDto.builder()
             .email("create@worker.com")
             .name("Create Worker")
             .phone("4561237890")
@@ -68,7 +68,7 @@ public class VendorMapperTest {
             .name("Create Vendor")
             .phone("1234567890")
             .ownerId(2L)
-            .workers(Collections.singletonList(createWorkerDto))
+            .workers(Collections.singletonList(saveWorkerDto))
             .build();
 
         // Act
