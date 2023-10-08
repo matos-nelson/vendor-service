@@ -1,5 +1,8 @@
 package org.rent.circle.vendor.api.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -10,8 +13,11 @@ import io.quarkus.test.junit.mockito.InjectMock;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.rent.circle.vendor.api.dto.SaveWorkerDto;
 import org.rent.circle.vendor.api.dto.UpdateWorkerDto;
+import org.rent.circle.vendor.api.persistence.model.Vendor;
 import org.rent.circle.vendor.api.persistence.model.Worker;
+import org.rent.circle.vendor.api.persistence.repository.VendorRepository;
 import org.rent.circle.vendor.api.persistence.repository.WorkerRepository;
 import org.rent.circle.vendor.api.service.mapper.WorkerMapper;
 
@@ -22,10 +28,52 @@ public class WorkerServiceTest {
     WorkerRepository workerRepository;
 
     @InjectMock
+    VendorRepository vendorRepository;
+
+    @InjectMock
     WorkerMapper workerMapper;
 
     @Inject
     WorkerService workerService;
+
+    @Test
+    public void saveWorker_WhenVendorCantBeFound_ShouldReturnNull() {
+        // Arrange
+        long vendorId = 1L;
+        SaveWorkerDto saveWorkerDto = SaveWorkerDto.builder().build();
+        when(vendorRepository.findById(vendorId)).thenReturn(null);
+
+        // Act
+        Long result = workerService.saveWorker(vendorId, saveWorkerDto);
+
+        // Assert
+        assertNull(result);
+        verify(workerMapper, never()).toModel(saveWorkerDto);
+        verify(workerRepository, never()).persist(Mockito.any(Worker.class));
+    }
+
+    @Test
+    public void saveWorker_WhenCalled_ShouldSaveWorker() {
+        // Arrange
+        long vendorId = 123L;
+
+        Vendor vendor = new Vendor();
+        vendor.setId(vendorId);
+
+        Worker worker = new Worker();
+        worker.setId(100L);
+
+        SaveWorkerDto saveWorkerDto = SaveWorkerDto.builder().build();
+        when(vendorRepository.findById(vendorId)).thenReturn(vendor);
+        when(workerMapper.toModel(saveWorkerDto)).thenReturn(worker);
+
+        // Act
+        Long result = workerService.saveWorker(vendorId, saveWorkerDto);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(vendorId, worker.getVendorId());
+    }
 
     @Test
     public void updateWorkerInfo_WhenWorkerIsNotFound_ShouldReturnNotUpdate() {
