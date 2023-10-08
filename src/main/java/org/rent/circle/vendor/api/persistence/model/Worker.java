@@ -36,4 +36,8 @@ public class Worker extends BaseModel {
 
     @Column(name = "is_active")
     private boolean active;
+
+    public Worker() {
+        this.active = true;
+    }
 }

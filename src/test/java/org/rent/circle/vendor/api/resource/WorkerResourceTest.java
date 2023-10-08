@@ -1,6 +1,7 @@
 package org.rent.circle.vendor.api.resource;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.is;
 
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
@@ -8,12 +9,52 @@ import io.quarkus.test.h2.H2DatabaseTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;
+import org.rent.circle.vendor.api.dto.SaveWorkerDto;
 import org.rent.circle.vendor.api.dto.UpdateWorkerDto;
 
 @QuarkusTest
 @TestHTTPEndpoint(WorkerResource.class)
 @QuarkusTestResource(H2DatabaseTestResource.class)
 public class WorkerResourceTest {
+
+    @Test
+    public void Post_WhenGivenAnInValidRequestToSave_ShouldReturnBadRequest() {
+        // Arrange
+        long vendorId = 100L;
+        SaveWorkerDto saveWorkerDto = SaveWorkerDto.builder().build();
+
+        // Act
+        // Assert
+        given()
+            .contentType("application/json")
+            .body(saveWorkerDto)
+            .when()
+            .post("/vendor/" + vendorId)
+            .then()
+            .statusCode(HttpStatus.SC_BAD_REQUEST);
+    }
+
+    @Test
+    public void Post_WhenGivenAValidRequestToSave_ShouldReturnSavedWorkerId() {
+        // Arrange
+        long vendorId = 100L;
+        SaveWorkerDto saveWorkerDto = SaveWorkerDto.builder()
+            .email("create@worker.com")
+            .name("Create Worker")
+            .phone("4561237890")
+            .build();
+
+        // Act
+        // Assert
+        given()
+            .contentType("application/json")
+            .body(saveWorkerDto)
+            .when()
+            .post("/vendor/" + vendorId)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .body(is("2"));
+    }
 
     @Test
     public void PATCH_WhenGivenRequestToUpdateWorkerFailsValidation_ShouldReturnBadRequest() {
