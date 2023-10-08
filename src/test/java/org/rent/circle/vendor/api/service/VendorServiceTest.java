@@ -53,12 +53,11 @@ public class VendorServiceTest {
     public void updateVendorInfo_WhenVendorIsNotFound_ShouldReturnNotUpdate() {
         // Arrange
         long vendorId = 1L;
-        long ownerId = 2L;
         UpdateVendorDto updateResidentDto = UpdateVendorDto.builder().build();
-        when(vendorRepository.findVendor(vendorId, ownerId)).thenReturn(null);
+        when(vendorRepository.findById(vendorId)).thenReturn(null);
 
         // Act
-        vendorService.updateVendorInfo(vendorId, ownerId, updateResidentDto);
+        vendorService.updateVendorInfo(vendorId, updateResidentDto);
 
         // Assert
         verify(vendorMapper, never()).updateVendor(updateResidentDto, null);
@@ -69,7 +68,6 @@ public class VendorServiceTest {
     public void updateVendorInfo_WhenCalled_ShouldUpdate() {
         // Arrange
         Long vendorId = 1L;
-        Long ownerId = 2L;
 
         Vendor vendor = new Vendor();
         vendor.setId(vendorId);
@@ -79,10 +77,10 @@ public class VendorServiceTest {
             .phone("9876543210")
             .email("updated@email.com")
             .build();
-        when(vendorRepository.findVendor(vendorId, ownerId)).thenReturn(vendor);
+        when(vendorRepository.findById(vendorId)).thenReturn(vendor);
 
         // Act
-        vendorService.updateVendorInfo(vendorId, ownerId, updateVendorInfo);
+        vendorService.updateVendorInfo(vendorId, updateVendorInfo);
 
         // Assert
         verify(vendorMapper, times(1)).updateVendor(updateVendorInfo, vendor);
