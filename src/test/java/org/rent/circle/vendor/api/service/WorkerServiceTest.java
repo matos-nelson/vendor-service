@@ -1,6 +1,5 @@
 package org.rent.circle.vendor.api.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.never;
@@ -11,6 +10,7 @@ import static org.mockito.Mockito.when;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import jakarta.inject.Inject;
+import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.rent.circle.vendor.api.dto.SaveWorkerDto;
@@ -59,6 +59,7 @@ public class WorkerServiceTest {
 
         Vendor vendor = new Vendor();
         vendor.setId(vendorId);
+        vendor.setWorkers(new ArrayList<>());
 
         Worker worker = new Worker();
         worker.setId(100L);
@@ -72,7 +73,7 @@ public class WorkerServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(vendorId, worker.getVendorId());
+        verify(workerRepository, times(1)).persist(worker);
     }
 
     @Test

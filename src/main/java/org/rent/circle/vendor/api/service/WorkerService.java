@@ -31,7 +31,7 @@ public class WorkerService {
         }
 
         Worker worker = workerMapper.toModel(saveWorker);
-        worker.setVendorId(vendorId);
+        vendor.getWorkers().add(worker);
 
         workerRepository.persist(worker);
         return worker.getId();
