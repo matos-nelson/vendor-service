@@ -42,6 +42,7 @@ public class WorkerMapperTest {
             .name("Updated Name")
             .email("updated@email.com")
             .phone("9876543210")
+            .active(true)
             .build();
 
         // Act

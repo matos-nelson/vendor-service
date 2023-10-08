@@ -43,6 +43,7 @@ public class WorkerResourceTest {
             .phone("9999999999")
             .name("New Name")
             .email("new@email.com")
+            .active(false)
             .build();
 
         // Act

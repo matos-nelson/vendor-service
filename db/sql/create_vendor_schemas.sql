@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS worker (
   name varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   email varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   phone varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
+  is_active BOOL NOT NULL DEFAULT TRUE,
   created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   KEY owner_id_idx (vendor_id)

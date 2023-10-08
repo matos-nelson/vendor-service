@@ -33,4 +33,7 @@ public class Worker extends BaseModel {
 
     @Column(name = "phone")
     private String phone;
+
+    @Column(name = "is_active")
+    private boolean active;
 }

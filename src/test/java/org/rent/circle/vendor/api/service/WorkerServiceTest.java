@@ -56,6 +56,7 @@ public class WorkerServiceTest {
             .name("Updated Name")
             .phone("9876543210")
             .email("updated@email.com")
+            .active(true)
             .build();
         when(workerRepository.findWorker(workerId, vendorId)).thenReturn(worker);
 
