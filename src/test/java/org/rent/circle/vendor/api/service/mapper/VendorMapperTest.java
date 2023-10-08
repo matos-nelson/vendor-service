@@ -88,7 +88,7 @@ public class VendorMapperTest {
     }
 
     @Test
-    public void updateVendor_WhenGivenNullUpdateVendorResidentDto_ShouldReturnNull() {
+    public void updateVendor_WhenGivenNullUpdateVendorDto_ShouldReturnNull() {
         // Arrange
         Vendor vendor = new Vendor();
         vendor.setOwnerId(1L);
@@ -105,7 +105,7 @@ public class VendorMapperTest {
     }
 
     @Test
-    public void update_WhenGivenAnUpdateVendorDto_ShouldMap() {
+    public void updateVendor_WhenGivenAnUpdateVendorDto_ShouldMap() {
         // Arrange
         Vendor vendor = new Vendor();
         vendor.setOwnerId(1L);
@@ -129,5 +129,4 @@ public class VendorMapperTest {
         assertEquals(updateVendor.getEmail(), vendor.getEmail());
         assertEquals(updateVendor.getPhone(), vendor.getPhone());
     }
-
 }
