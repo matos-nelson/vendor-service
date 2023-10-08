@@ -27,5 +27,5 @@ public class UpdateWorkerDto {
     private String phone;
 
     @NotNull
-    private boolean active;
+    private Boolean active;
 }
