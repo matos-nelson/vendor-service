@@ -31,7 +31,7 @@ public class WorkerService {
         }
 
         Worker worker = workerMapper.toModel(saveWorker);
-        vendor.getWorkers().add(worker);
+        worker.setVendor(vendor);
 
         workerRepository.persist(worker);
         return worker.getId();
@@ -41,6 +41,7 @@ public class WorkerService {
     public void updateWorkerInfo(Long workerId, Long vendorId, UpdateWorkerDto updateWorkerInfo) {
         Worker worker = workerRepository.findWorker(workerId, vendorId);
         if (worker == null) {
+            log.info("Worker Could Not Be Found With Given Worker Id {} and Vendor Id {}", workerId, vendorId);
             return;
         }
 

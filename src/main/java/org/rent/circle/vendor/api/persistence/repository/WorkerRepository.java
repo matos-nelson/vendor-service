@@ -10,6 +10,6 @@ public class WorkerRepository implements PanacheRepository<Worker> {
 
     public Worker findWorker(Long id, Long vendorId) {
         Parameters queryParams = Parameters.with("id", id).and("vendorId", vendorId);
-        return find("id = :id and vendorId = :vendorId", queryParams).firstResult();
+        return find("id = :id and vendor.id = :vendorId", queryParams).firstResult();
     }
 }
