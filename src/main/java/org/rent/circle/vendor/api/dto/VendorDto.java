@@ -15,6 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VendorDto {
 
+    private Long id;
     private Long ownerId;
     private Long addressId;
     private String name;

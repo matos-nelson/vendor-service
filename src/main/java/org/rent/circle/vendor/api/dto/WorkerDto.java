@@ -14,6 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class WorkerDto {
 
+    private Long id;
     private String name;
     private String email;
     private String phone;
