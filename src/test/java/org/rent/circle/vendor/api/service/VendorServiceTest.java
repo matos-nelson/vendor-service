@@ -2,6 +2,7 @@ package org.rent.circle.vendor.api.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.rent.circle.vendor.api.dto.SaveVendorDto;
 import org.rent.circle.vendor.api.dto.UpdateVendorDto;
+import org.rent.circle.vendor.api.dto.VendorDto;
 import org.rent.circle.vendor.api.persistence.model.Vendor;
 import org.rent.circle.vendor.api.persistence.repository.VendorRepository;
 import org.rent.circle.vendor.api.service.mapper.VendorMapper;
@@ -85,5 +87,42 @@ public class VendorServiceTest {
         // Assert
         verify(vendorMapper, times(1)).updateVendor(updateVendorInfo, vendor);
         verify(vendorRepository, times(1)).persist(vendor);
+    }
+
+    @Test
+    public void getVendor_WhenVendorIsNotFound_ShouldReturnNull() {
+        // Arrange
+        Long vendorId = 1L;
+        Long ownerId = 2L;
+        when(vendorRepository.findVendor(vendorId, ownerId)).thenReturn(null);
+
+        // Act
+        VendorDto result = vendorService.getVendor(vendorId, ownerId);
+
+        // Assert
+        assertNull(result);
+    }
+
+    @Test
+    public void getVendor_WhenVendorIsFound_ShouldReturnVendor() {
+        // Arrange
+        Long vendorId = 1L;
+        Long ownerId = 2L;
+        Vendor vendor = new Vendor();
+        vendor.setId(vendorId);
+        vendor.setOwnerId(ownerId);
+
+        VendorDto vendorDto = VendorDto.builder()
+            .ownerId(ownerId)
+            .build();
+        when(vendorRepository.findVendor(vendorId, ownerId)).thenReturn(vendor);
+        when(vendorMapper.toDto(vendor)).thenReturn(vendorDto);
+
+        // Act
+        VendorDto result = vendorService.getVendor(vendorId, ownerId);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(vendorDto, result);
     }
 }

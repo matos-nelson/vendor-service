@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.rent.circle.vendor.api.dto.SaveVendorDto;
 import org.rent.circle.vendor.api.dto.UpdateVendorDto;
+import org.rent.circle.vendor.api.dto.VendorDto;
 import org.rent.circle.vendor.api.persistence.model.Vendor;
 import org.rent.circle.vendor.api.persistence.repository.VendorRepository;
 import org.rent.circle.vendor.api.service.mapper.VendorMapper;
@@ -35,5 +36,15 @@ public class VendorService {
 
         vendorMapper.updateVendor(updateVendorInfo, vendor);
         vendorRepository.persist(vendor);
+    }
+
+    public VendorDto getVendor(Long vendorId, Long ownerId) {
+        Vendor vendor = vendorRepository.findVendor(vendorId, ownerId);
+        if (vendor == null) {
+            log.info("Could Not Find Vendor With Given Ids: VendorId {} OwnerId {}", vendorId, ownerId);
+            return null;
+        }
+
+        return vendorMapper.toDto(vendor);
     }
 }
