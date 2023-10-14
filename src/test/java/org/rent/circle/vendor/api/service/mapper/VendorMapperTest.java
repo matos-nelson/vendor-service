@@ -1,17 +1,21 @@
 package org.rent.circle.vendor.api.service.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.rent.circle.vendor.api.dto.SaveVendorDto;
 import org.rent.circle.vendor.api.dto.SaveWorkerDto;
 import org.rent.circle.vendor.api.dto.UpdateVendorDto;
+import org.rent.circle.vendor.api.dto.VendorDto;
 import org.rent.circle.vendor.api.persistence.model.Vendor;
+import org.rent.circle.vendor.api.persistence.model.Worker;
 
 @QuarkusTest
 public class VendorMapperTest {
@@ -128,5 +132,157 @@ public class VendorMapperTest {
         assertEquals(updateVendor.getName(), vendor.getName());
         assertEquals(updateVendor.getEmail(), vendor.getEmail());
         assertEquals(updateVendor.getPhone(), vendor.getPhone());
+    }
+
+    @Test
+    public void toDto_WhenGivenNull_ShouldReturnNull() {
+        // Arrange
+
+        // Act
+        VendorDto result = vendorMapper.toDto(null);
+
+        // Assert
+        assertNull(result);
+    }
+
+    @Test
+    public void toDto_WhenGivenVendor_ShouldMap() {
+        // Arrange
+        Vendor vendor = new Vendor();
+        vendor.setId(1L);
+        vendor.setAddressId(2L);
+        vendor.setOwnerId(3L);
+        vendor.setPhone("1234567890");
+        vendor.setName("Test Vendor");
+        vendor.setEmail("test_vendor@email.com");
+
+        // Act
+        VendorDto result = vendorMapper.toDto(vendor);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(vendor.getId(), result.getId());
+        assertEquals(vendor.getAddressId(), result.getAddressId());
+        assertEquals(vendor.getOwnerId(), result.getOwnerId());
+        assertEquals(vendor.getEmail(), result.getEmail());
+        assertEquals(vendor.getName(), result.getName());
+        assertEquals(vendor.getPhone(), result.getPhone());
+    }
+
+    @Test
+    public void toDto_WhenGivenVendorWithWorkers_ShouldMap() {
+        // Arrange
+        Worker worker = new Worker();
+        worker.setId(100L);
+        worker.setActive(false);
+        worker.setPhone("5678901234");
+        worker.setEmail("test_worker@email.com");
+        worker.setName("Test Worker");
+
+        Vendor vendor = new Vendor();
+        vendor.setId(1L);
+        vendor.setAddressId(2L);
+        vendor.setOwnerId(3L);
+        vendor.setPhone("1234567890");
+        vendor.setName("Test Vendor");
+        vendor.setEmail("test_vendor@email.com");
+
+        worker.setVendor(vendor);
+        vendor.setWorkers(Collections.singletonList(worker));
+
+        // Act
+        VendorDto result = vendorMapper.toDto(vendor);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(vendor.getId(), result.getId());
+        assertEquals(vendor.getAddressId(), result.getAddressId());
+        assertEquals(vendor.getOwnerId(), result.getOwnerId());
+        assertEquals(vendor.getEmail(), result.getEmail());
+        assertEquals(vendor.getName(), result.getName());
+        assertEquals(vendor.getPhone(), result.getPhone());
+        assertEquals(vendor.getWorkers().size(), result.getWorkers().size());
+        assertEquals(vendor.getWorkers().get(0).getId(), result.getWorkers().get(0).getId());
+        assertEquals(vendor.getWorkers().get(0).getEmail(), result.getWorkers().get(0).getEmail());
+        assertEquals(vendor.getWorkers().get(0).getName(), result.getWorkers().get(0).getName());
+        assertEquals(vendor.getWorkers().get(0).getPhone(), result.getWorkers().get(0).getPhone());
+        assertFalse(result.getWorkers().get(0).isActive());
+    }
+
+    @Test
+    public void toDtoList_WhenGivenNull_ShouldReturnNull() {
+        // Arrange
+
+        // Act
+        List<VendorDto> result = vendorMapper.toDtoList(null);
+
+        // Assert
+        assertNull(result);
+    }
+
+    @Test
+    public void toDtoList_WhenGivenAVendorList_ShouldMap() {
+        // Arrange
+        Vendor vendor = new Vendor();
+        vendor.setId(1L);
+        vendor.setAddressId(2L);
+        vendor.setOwnerId(3L);
+        vendor.setPhone("1234567890");
+        vendor.setName("Test Vendor");
+        vendor.setEmail("test_vendor@email.com");
+
+        // Act
+        List<VendorDto> result = vendorMapper.toDtoList(Collections.singletonList(vendor));
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(vendor.getId(), result.get(0).getId());
+        assertEquals(vendor.getAddressId(), result.get(0).getAddressId());
+        assertEquals(vendor.getOwnerId(), result.get(0).getOwnerId());
+        assertEquals(vendor.getEmail(), result.get(0).getEmail());
+        assertEquals(vendor.getName(), result.get(0).getName());
+        assertEquals(vendor.getPhone(), result.get(0).getPhone());
+    }
+
+    @Test
+    public void toDtoList_WhenGivenVendorListWithWorkers_ShouldMap() {
+        // Arrange
+        Worker worker = new Worker();
+        worker.setId(100L);
+        worker.setActive(false);
+        worker.setPhone("5678901234");
+        worker.setEmail("test_worker@email.com");
+        worker.setName("Test Worker");
+
+        Vendor vendor = new Vendor();
+        vendor.setId(1L);
+        vendor.setAddressId(2L);
+        vendor.setOwnerId(3L);
+        vendor.setPhone("1234567890");
+        vendor.setName("Test Vendor");
+        vendor.setEmail("test_vendor@email.com");
+
+        worker.setVendor(vendor);
+        vendor.setWorkers(Collections.singletonList(worker));
+
+        // Act
+        List<VendorDto> result = vendorMapper.toDtoList(Collections.singletonList(vendor));
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(vendor.getId(), result.get(0).getId());
+        assertEquals(vendor.getAddressId(), result.get(0).getAddressId());
+        assertEquals(vendor.getOwnerId(), result.get(0).getOwnerId());
+        assertEquals(vendor.getEmail(), result.get(0).getEmail());
+        assertEquals(vendor.getName(), result.get(0).getName());
+        assertEquals(vendor.getPhone(), result.get(0).getPhone());
+        assertEquals(vendor.getWorkers().size(), result.get(0).getWorkers().size());
+        assertEquals(vendor.getWorkers().get(0).getId(), result.get(0).getWorkers().get(0).getId());
+        assertEquals(vendor.getWorkers().get(0).getEmail(), result.get(0).getWorkers().get(0).getEmail());
+        assertEquals(vendor.getWorkers().get(0).getName(), result.get(0).getWorkers().get(0).getName());
+        assertEquals(vendor.getWorkers().get(0).getPhone(), result.get(0).getWorkers().get(0).getPhone());
+        assertFalse(result.get(0).getWorkers().get(0).isActive());
     }
 }

@@ -2,6 +2,8 @@ package org.rent.circle.vendor.api.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -10,10 +12,13 @@ import static org.mockito.Mockito.when;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import jakarta.inject.Inject;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.rent.circle.vendor.api.dto.SaveVendorDto;
 import org.rent.circle.vendor.api.dto.UpdateVendorDto;
+import org.rent.circle.vendor.api.dto.VendorDto;
 import org.rent.circle.vendor.api.persistence.model.Vendor;
 import org.rent.circle.vendor.api.persistence.repository.VendorRepository;
 import org.rent.circle.vendor.api.service.mapper.VendorMapper;
@@ -85,5 +90,77 @@ public class VendorServiceTest {
         // Assert
         verify(vendorMapper, times(1)).updateVendor(updateVendorInfo, vendor);
         verify(vendorRepository, times(1)).persist(vendor);
+    }
+
+    @Test
+    public void getVendor_WhenVendorIsNotFound_ShouldReturnNull() {
+        // Arrange
+        Long vendorId = 1L;
+        Long ownerId = 2L;
+        when(vendorRepository.findVendor(vendorId, ownerId)).thenReturn(null);
+
+        // Act
+        VendorDto result = vendorService.getVendor(vendorId, ownerId);
+
+        // Assert
+        assertNull(result);
+    }
+
+    @Test
+    public void getVendor_WhenVendorIsFound_ShouldReturnVendor() {
+        // Arrange
+        Long vendorId = 1L;
+        Long ownerId = 2L;
+        Vendor vendor = new Vendor();
+        vendor.setId(vendorId);
+        vendor.setOwnerId(ownerId);
+
+        VendorDto vendorDto = VendorDto.builder()
+            .ownerId(ownerId)
+            .build();
+        when(vendorRepository.findVendor(vendorId, ownerId)).thenReturn(vendor);
+        when(vendorMapper.toDto(vendor)).thenReturn(vendorDto);
+
+        // Act
+        VendorDto result = vendorService.getVendor(vendorId, ownerId);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(vendorDto, result);
+    }
+
+    @Test
+    public void getVendors_WhenVendorsWithGivenOwnerIdAreNotFound_ShouldReturnEmptyList() {
+        // Arrange
+        Long ownerId = 1L;
+        int page = 2;
+        int pageSize = 10;
+
+        when(vendorRepository.findVendors(ownerId, page, pageSize)).thenReturn(null);
+
+        // Act
+        List<VendorDto> result = vendorService.getVendors(ownerId, page, pageSize);
+
+        // Assert
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void getVendors_WhenVendorsWithGivenOwnerIdIdAreFound_ShouldReturnList() {
+        // Arrange
+        Long ownerId = 1L;
+        int page = 2;
+        int pageSize = 10;
+        List<Vendor> vendors = Collections.singletonList(new Vendor());
+        when(vendorRepository.findVendors(ownerId, page, pageSize)).thenReturn(vendors);
+        when(vendorMapper.toDtoList(vendors)).thenReturn(
+            Collections.singletonList(new VendorDto()));
+
+        // Act
+        List<VendorDto> result = vendorService.getVendors(ownerId, page, pageSize);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, result.size());
     }
 }

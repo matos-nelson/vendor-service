@@ -20,5 +20,6 @@ CREATE TABLE IF NOT EXISTS worker (
   is_active BOOL NOT NULL DEFAULT TRUE,
   created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  KEY owner_id_idx (vendor_id)
+  KEY vendor_id_idx (vendor_id),
+  KEY is_active_idx (is_active)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
