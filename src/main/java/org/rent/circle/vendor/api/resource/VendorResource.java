@@ -50,8 +50,9 @@ public class VendorResource {
     @GET
     @Path("/owner/{ownerId}")
     public List<VendorDto> getVendors(@NotNull @PathParam("ownerId") Long ownerId,
+        @NotNull @QueryParam("filterActiveWorkers") boolean filterActiveWorkers,
         @NotNull @QueryParam("page") @Min(0) Integer page,
         @NotNull @QueryParam("pageSize") @Min(1) Integer pageSize) {
-        return vendorService.getVendors(ownerId, page, pageSize);
+        return vendorService.getVendors(ownerId, filterActiveWorkers, page, pageSize);
     }
 }

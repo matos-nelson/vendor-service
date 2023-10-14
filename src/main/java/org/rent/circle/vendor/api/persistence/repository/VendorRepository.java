@@ -15,9 +15,18 @@ public class VendorRepository implements PanacheRepository<Vendor> {
         return find("id = :id and ownerId = :ownerId", queryParams).firstResult();
     }
 
-    public List<Vendor> findVendors(Long ownerId, int page, int pageSize) {
-        return find("ownerId", ownerId)
-            .page(Page.of(page, pageSize))
+    public List<Vendor> findVendors(Long ownerId, boolean filterActiveWorkers, int page, int pageSize) {
+
+        if (!filterActiveWorkers) {
+            return find("ownerId", ownerId)
+                .page(Page.of(page, pageSize))
+                .list();
+        }
+
+        Parameters queryParams = Parameters.with("ownerId", ownerId);
+        return find("from Vendor v "
+            + "left join fetch v.workers w "
+            + "where v.ownerId = :ownerId and w.active = true", queryParams)
             .list();
     }
 }

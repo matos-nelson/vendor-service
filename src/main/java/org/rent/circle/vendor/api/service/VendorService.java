@@ -49,8 +49,8 @@ public class VendorService {
         return vendorMapper.toDto(vendor);
     }
 
-    public List<VendorDto> getVendors(Long ownerId, int page, int pageSize) {
-        List<Vendor> vendors = vendorRepository.findVendors(ownerId, page, pageSize);
+    public List<VendorDto> getVendors(Long ownerId, boolean filterActiveWorkers, int page, int pageSize) {
+        List<Vendor> vendors = vendorRepository.findVendors(ownerId, filterActiveWorkers, page, pageSize);
         return vendorMapper.toDtoList(vendors);
     }
 }

@@ -1,6 +1,6 @@
 package org.rent.circle.vendor.api.persistence.repository;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -51,11 +51,12 @@ public class VendorRepositoryTest {
         // Arrange
 
         // Act
-        List<Vendor> result = vendorRepository.findVendors(500L, 0, 10);
+        List<Vendor> result = vendorRepository.findVendors(500L, false, 0, 10);
 
         // Assert
         assertNotNull(result);
-        assertFalse(result.isEmpty());
+        assertEquals(1, result.size());
+        assertEquals(2, result.get(0).getWorkers().size());
     }
 
     @Test
@@ -64,10 +65,38 @@ public class VendorRepositoryTest {
         // Arrange
 
         // Act
-        List<Vendor> result = vendorRepository.findVendors(500L, 10, 10);
+        List<Vendor> result = vendorRepository.findVendors(500L, false, 10, 10);
 
         // Assert
         assertNotNull(result);
         assertTrue(result.isEmpty());
+    }
+
+    @Test
+    @TestTransaction
+    public void findVendors_WhenVendorsDoExistAndActiveWorkersAreFiltered_ShouldReturnVendorsActiveWorkersOnly() {
+        // Arrange
+
+        // Act
+        List<Vendor> result = vendorRepository.findVendors(500L, true, 0, 10);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(1, result.get(0).getWorkers().size());
+    }
+
+    @Test
+    @TestTransaction
+    public void findVendors_WhenVendorsDoExistAndActiveWorkersAreNotFiltered_ShouldReturnVendorsActiveWorkersOnly() {
+        // Arrange
+
+        // Act
+        List<Vendor> result = vendorRepository.findVendors(500L, false, 0, 10);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(2, result.get(0).getWorkers().size());
     }
 }
