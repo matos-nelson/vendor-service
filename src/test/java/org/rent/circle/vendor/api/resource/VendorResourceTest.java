@@ -142,11 +142,15 @@ public class VendorResourceTest {
                 "name", is("First Vendor"),
                 "email", is("vendor@email.com"),
                 "phone", is("1234567890"),
-                "workers", is(Matchers.hasSize(1)),
+                "workers", is(Matchers.hasSize(2)),
                 "workers[0].name", is("First Worker"),
                 "workers[0].email", is("worker@email.com"),
                 "workers[0].phone", is("3216540987"),
-                "workers[0].active", is(true)
+                "workers[0].active", is(true),
+                "workers[1].name", is("UnActive Worker"),
+                "workers[1].email", is("unactiveworker@email.com"),
+                "workers[1].phone", is("5896734599"),
+                "workers[1].active", is(false)
             );
     }
 
@@ -171,7 +175,7 @@ public class VendorResourceTest {
         // Act
         List<VendorDto> result = given()
             .when()
-            .get("/owner/500?page=0&pageSize=10")
+            .get("/owner/500?page=0&pageSize=10&filterActiveWorkers=true")
             .then()
             .statusCode(HttpStatus.SC_OK)
             .extract()

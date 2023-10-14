@@ -136,10 +136,10 @@ public class VendorServiceTest {
         int page = 2;
         int pageSize = 10;
 
-        when(vendorRepository.findVendors(ownerId, page, pageSize)).thenReturn(null);
+        when(vendorRepository.findVendors(ownerId, true, page, pageSize)).thenReturn(null);
 
         // Act
-        List<VendorDto> result = vendorService.getVendors(ownerId, page, pageSize);
+        List<VendorDto> result = vendorService.getVendors(ownerId, true, page, pageSize);
 
         // Assert
         assertTrue(result.isEmpty());
@@ -152,12 +152,12 @@ public class VendorServiceTest {
         int page = 2;
         int pageSize = 10;
         List<Vendor> vendors = Collections.singletonList(new Vendor());
-        when(vendorRepository.findVendors(ownerId, page, pageSize)).thenReturn(vendors);
+        when(vendorRepository.findVendors(ownerId, false, page, pageSize)).thenReturn(vendors);
         when(vendorMapper.toDtoList(vendors)).thenReturn(
             Collections.singletonList(new VendorDto()));
 
         // Act
-        List<VendorDto> result = vendorService.getVendors(ownerId, page, pageSize);
+        List<VendorDto> result = vendorService.getVendors(ownerId, false, page, pageSize);
 
         // Assert
         assertNotNull(result);
