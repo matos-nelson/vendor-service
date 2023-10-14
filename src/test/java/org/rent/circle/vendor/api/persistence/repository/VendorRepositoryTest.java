@@ -1,13 +1,16 @@
 package org.rent.circle.vendor.api.persistence.repository;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.h2.H2DatabaseTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.rent.circle.vendor.api.persistence.model.Vendor;
 
@@ -40,5 +43,31 @@ public class VendorRepositoryTest {
 
         // Assert
         assertNotNull(result);
+    }
+
+    @Test
+    @TestTransaction
+    public void findVendors_WhenVendorsDoExist_ShouldReturnVendors() {
+        // Arrange
+
+        // Act
+        List<Vendor> result = vendorRepository.findVendors(500L, 0, 10);
+
+        // Assert
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+    }
+
+    @Test
+    @TestTransaction
+    public void findVendors_WhenVendorsDoNotExistInPage_ShouldReturnNoVendors() {
+        // Arrange
+
+        // Act
+        List<Vendor> result = vendorRepository.findVendors(500L, 10, 10);
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
     }
 }
