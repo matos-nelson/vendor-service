@@ -2,6 +2,7 @@ package org.rent.circle.vendor.api.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.rent.circle.vendor.api.dto.SaveVendorDto;
@@ -46,5 +47,10 @@ public class VendorService {
         }
 
         return vendorMapper.toDto(vendor);
+    }
+
+    public List<VendorDto> getVendors(Long ownerId, int page, int pageSize) {
+        List<Vendor> vendors = vendorRepository.findVendors(ownerId, page, pageSize);
+        return vendorMapper.toDtoList(vendors);
     }
 }

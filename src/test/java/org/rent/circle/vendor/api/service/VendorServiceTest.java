@@ -3,6 +3,7 @@ package org.rent.circle.vendor.api.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -11,6 +12,8 @@ import static org.mockito.Mockito.when;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import jakarta.inject.Inject;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.rent.circle.vendor.api.dto.SaveVendorDto;
@@ -124,5 +127,40 @@ public class VendorServiceTest {
         // Assert
         assertNotNull(result);
         assertEquals(vendorDto, result);
+    }
+
+    @Test
+    public void getVendors_WhenVendorsWithGivenOwnerIdAreNotFound_ShouldReturnEmptyList() {
+        // Arrange
+        Long ownerId = 1L;
+        int page = 2;
+        int pageSize = 10;
+
+        when(vendorRepository.findVendors(ownerId, page, pageSize)).thenReturn(null);
+
+        // Act
+        List<VendorDto> result = vendorService.getVendors(ownerId, page, pageSize);
+
+        // Assert
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void getVendors_WhenVendorsWithGivenOwnerIdIdAreFound_ShouldReturnList() {
+        // Arrange
+        Long ownerId = 1L;
+        int page = 2;
+        int pageSize = 10;
+        List<Vendor> vendors = Collections.singletonList(new Vendor());
+        when(vendorRepository.findVendors(ownerId, page, pageSize)).thenReturn(vendors);
+        when(vendorMapper.toDtoList(vendors)).thenReturn(
+            Collections.singletonList(new VendorDto()));
+
+        // Act
+        List<VendorDto> result = vendorService.getVendors(ownerId, page, pageSize);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, result.size());
     }
 }
