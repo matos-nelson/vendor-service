@@ -184,6 +184,7 @@ public class VendorMapperTest {
         vendor.setName("Test Vendor");
         vendor.setEmail("test_vendor@email.com");
 
+        worker.setVendor(vendor);
         vendor.setWorkers(Collections.singletonList(worker));
 
         // Act

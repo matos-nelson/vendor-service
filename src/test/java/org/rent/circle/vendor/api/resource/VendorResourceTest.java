@@ -9,6 +9,7 @@ import io.quarkus.test.h2.H2DatabaseTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.Collections;
 import org.apache.http.HttpStatus;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.rent.circle.vendor.api.dto.SaveVendorDto;
 import org.rent.circle.vendor.api.dto.SaveWorkerDto;
@@ -104,5 +105,42 @@ public class VendorResourceTest {
             .patch("/" + vendorId)
             .then()
             .statusCode(HttpStatus.SC_NO_CONTENT);
+    }
+
+    @Test
+    public void GET_WhenAVendorCantBeFound_ShouldReturnNoContent() {
+        // Arrange
+
+        // Act
+        // Assert
+        given()
+            .when()
+            .get("/1/owner/2")
+            .then()
+            .statusCode(HttpStatus.SC_NO_CONTENT);
+    }
+
+    @Test
+    public void GET_WhenVendorIsFound_ShouldReturnVendor() {
+        // Arrange
+
+        // Act
+        // Assert
+        given()
+            .when()
+            .get("/400/owner/500")
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .body("ownerId", is(500),
+                "addressId", is(600),
+                "name", is("First Vendor"),
+                "email", is("vendor@email.com"),
+                "phone", is("1234567890"),
+                "workers", is(Matchers.hasSize(1)),
+                "workers[0].name", is("First Worker"),
+                "workers[0].email", is("worker@email.com"),
+                "workers[0].phone", is("3216540987"),
+                "workers[0].active", is(true)
+            );
     }
 }
