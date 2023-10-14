@@ -18,5 +18,5 @@ public class WorkerDto {
     private String name;
     private String email;
     private String phone;
-    private Boolean active;
+    private boolean active;
 }

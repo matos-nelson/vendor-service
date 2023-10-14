@@ -1,6 +1,7 @@
 package org.rent.circle.vendor.api.service.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -205,6 +206,7 @@ public class VendorMapperTest {
         assertEquals(vendor.getWorkers().get(0).getEmail(), result.getWorkers().get(0).getEmail());
         assertEquals(vendor.getWorkers().get(0).getName(), result.getWorkers().get(0).getName());
         assertEquals(vendor.getWorkers().get(0).getPhone(), result.getWorkers().get(0).getPhone());
+        assertFalse(result.getWorkers().get(0).isActive());
     }
 
     @Test
@@ -281,5 +283,6 @@ public class VendorMapperTest {
         assertEquals(vendor.getWorkers().get(0).getEmail(), result.get(0).getWorkers().get(0).getEmail());
         assertEquals(vendor.getWorkers().get(0).getName(), result.get(0).getWorkers().get(0).getName());
         assertEquals(vendor.getWorkers().get(0).getPhone(), result.get(0).getWorkers().get(0).getPhone());
+        assertFalse(result.get(0).getWorkers().get(0).isActive());
     }
 }

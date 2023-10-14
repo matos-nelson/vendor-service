@@ -2,18 +2,24 @@ package org.rent.circle.vendor.api.resource;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.h2.H2DatabaseTestResource;
 import io.quarkus.test.junit.QuarkusTest;
+import io.restassured.common.mapper.TypeRef;
 import java.util.Collections;
+import java.util.List;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.rent.circle.vendor.api.dto.SaveVendorDto;
 import org.rent.circle.vendor.api.dto.SaveWorkerDto;
 import org.rent.circle.vendor.api.dto.UpdateVendorDto;
+import org.rent.circle.vendor.api.dto.VendorDto;
 
 @QuarkusTest
 @TestHTTPEndpoint(VendorResource.class)
@@ -142,5 +148,64 @@ public class VendorResourceTest {
                 "workers[0].phone", is("3216540987"),
                 "workers[0].active", is(true)
             );
+    }
+
+    @Test
+    public void GET_getVendors_WhenVendorsCantBeFound_ShouldReturnNoData() {
+        // Arrange
+
+        // Act
+        // Assert
+        given()
+            .when()
+            .get("/owner/999?page=0&pageSize=10")
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .body(is("[]"));
+    }
+
+    @Test
+    public void GET_getVendors_WhenVendorsAreFound_ShouldReturnData() {
+        // Arrange
+
+        // Act
+        List<VendorDto> result = given()
+            .when()
+            .get("/owner/500?page=0&pageSize=10")
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .extract()
+            .body()
+            .as(new TypeRef<>() {
+            });
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(400L, result.get(0).getId());
+        assertEquals(500L, result.get(0).getOwnerId());
+        assertEquals(600L, result.get(0).getAddressId());
+        assertEquals("First Vendor", result.get(0).getName());
+        assertEquals("1234567890", result.get(0).getPhone());
+        assertEquals("vendor@email.com", result.get(0).getEmail());
+        assertEquals(1, result.get(0).getWorkers().size());
+        assertEquals(700L, result.get(0).getWorkers().get(0).getId());
+        assertEquals("First Worker", result.get(0).getWorkers().get(0).getName());
+        assertEquals("3216540987", result.get(0).getWorkers().get(0).getPhone());
+        assertEquals("worker@email.com", result.get(0).getWorkers().get(0).getEmail());
+        assertTrue(result.get(0).getWorkers().get(0).isActive());
+    }
+
+    @Test
+    public void GET_getVendors_WhenFailsValidation_ShouldReturnBadRequest() {
+        // Arrange
+
+        // Act
+        // Assert
+        given()
+            .when()
+            .get("/owner/123?page=0")
+            .then()
+            .statusCode(HttpStatus.SC_BAD_REQUEST);
     }
 }
