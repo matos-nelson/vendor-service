@@ -17,7 +17,7 @@
     <lombok.version>1.18.30</lombok.version>
     <mapstruct.version>1.5.5.Final</mapstruct.version>
     <skipITs>true</skipITs>
-    <surefire-plugin.version>3.0.0</surefire-plugin.version>
+    <surefire-plugin.version>3.2.1</surefire-plugin.version>
   </properties>
   <dependencyManagement>
     <dependencies>
