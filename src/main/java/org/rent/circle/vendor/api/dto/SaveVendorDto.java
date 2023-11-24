@@ -18,8 +18,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SaveVendorDto {
 
-    @NotNull
-    private Long ownerId;
+    @NotBlank
+    private String managerId;
 
     @NotNull
     private Long addressId;

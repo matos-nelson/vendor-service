@@ -39,7 +39,7 @@ public class VendorServiceTest {
     public void saveVendor_WhenCalled_ShouldReturnSavedVendorId() {
         // Arrange
         SaveVendorDto saveVendorDto = SaveVendorDto.builder()
-            .ownerId(1L)
+            .managerId("1")
             .build();
 
         Vendor vendor = new Vendor();
@@ -96,11 +96,11 @@ public class VendorServiceTest {
     public void getVendor_WhenVendorIsNotFound_ShouldReturnNull() {
         // Arrange
         Long vendorId = 1L;
-        Long ownerId = 2L;
-        when(vendorRepository.findVendor(vendorId, ownerId)).thenReturn(null);
+        String managerId = "2";
+        when(vendorRepository.findVendor(vendorId, managerId)).thenReturn(null);
 
         // Act
-        VendorDto result = vendorService.getVendor(vendorId, ownerId);
+        VendorDto result = vendorService.getVendor(vendorId, managerId);
 
         // Assert
         assertNull(result);
@@ -110,19 +110,19 @@ public class VendorServiceTest {
     public void getVendor_WhenVendorIsFound_ShouldReturnVendor() {
         // Arrange
         Long vendorId = 1L;
-        Long ownerId = 2L;
+        String managerId = "2";
         Vendor vendor = new Vendor();
         vendor.setId(vendorId);
-        vendor.setOwnerId(ownerId);
+        vendor.setManagerId(managerId);
 
         VendorDto vendorDto = VendorDto.builder()
-            .ownerId(ownerId)
+            .managerId(managerId)
             .build();
-        when(vendorRepository.findVendor(vendorId, ownerId)).thenReturn(vendor);
+        when(vendorRepository.findVendor(vendorId, managerId)).thenReturn(vendor);
         when(vendorMapper.toDto(vendor)).thenReturn(vendorDto);
 
         // Act
-        VendorDto result = vendorService.getVendor(vendorId, ownerId);
+        VendorDto result = vendorService.getVendor(vendorId, managerId);
 
         // Assert
         assertNotNull(result);
@@ -130,34 +130,34 @@ public class VendorServiceTest {
     }
 
     @Test
-    public void getVendors_WhenVendorsWithGivenOwnerIdAreNotFound_ShouldReturnEmptyList() {
+    public void getVendors_WhenVendorsWithGivenManagerIdAreNotFound_ShouldReturnEmptyList() {
         // Arrange
-        Long ownerId = 1L;
+        String managerId = "1";
         int page = 2;
         int pageSize = 10;
 
-        when(vendorRepository.findVendors(ownerId, true, page, pageSize)).thenReturn(null);
+        when(vendorRepository.findVendors(managerId, true, page, pageSize)).thenReturn(null);
 
         // Act
-        List<VendorDto> result = vendorService.getVendors(ownerId, true, page, pageSize);
+        List<VendorDto> result = vendorService.getVendors(managerId, true, page, pageSize);
 
         // Assert
         assertTrue(result.isEmpty());
     }
 
     @Test
-    public void getVendors_WhenVendorsWithGivenOwnerIdIdAreFound_ShouldReturnList() {
+    public void getVendors_WhenVendorsWithGivenManagerIdIdAreFound_ShouldReturnList() {
         // Arrange
-        Long ownerId = 1L;
+        String managerId = "1";
         int page = 2;
         int pageSize = 10;
         List<Vendor> vendors = Collections.singletonList(new Vendor());
-        when(vendorRepository.findVendors(ownerId, false, page, pageSize)).thenReturn(vendors);
+        when(vendorRepository.findVendors(managerId, false, page, pageSize)).thenReturn(vendors);
         when(vendorMapper.toDtoList(vendors)).thenReturn(
             Collections.singletonList(new VendorDto()));
 
         // Act
-        List<VendorDto> result = vendorService.getVendors(ownerId, false, page, pageSize);
+        List<VendorDto> result = vendorService.getVendors(managerId, false, page, pageSize);
 
         // Assert
         assertNotNull(result);
