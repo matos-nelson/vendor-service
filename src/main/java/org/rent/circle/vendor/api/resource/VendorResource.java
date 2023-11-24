@@ -2,6 +2,7 @@ package org.rent.circle.vendor.api.resource;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -42,17 +43,18 @@ public class VendorResource {
     }
 
     @GET
-    @Path("/{id}/owner/{ownerId}")
-    public VendorDto getVendor(@NotNull @PathParam("id") Long vendorId, @NotNull @PathParam("ownerId") Long ownerId) {
-        return vendorService.getVendor(vendorId, ownerId);
+    @Path("/{id}/manager/{managerId}")
+    public VendorDto getVendor(@NotNull @PathParam("id") Long vendorId,
+        @NotBlank @PathParam("managerId") String managerId) {
+        return vendorService.getVendor(vendorId, managerId);
     }
 
     @GET
-    @Path("/owner/{ownerId}")
-    public List<VendorDto> getVendors(@NotNull @PathParam("ownerId") Long ownerId,
+    @Path("/manager/{managerId}")
+    public List<VendorDto> getVendors(@NotBlank @PathParam("managerId") String managerId,
         @NotNull @QueryParam("filterActiveWorkers") boolean filterActiveWorkers,
         @NotNull @QueryParam("page") @Min(0) Integer page,
         @NotNull @QueryParam("pageSize") @Min(1) Integer pageSize) {
-        return vendorService.getVendors(ownerId, filterActiveWorkers, page, pageSize);
+        return vendorService.getVendors(managerId, filterActiveWorkers, page, pageSize);
     }
 }

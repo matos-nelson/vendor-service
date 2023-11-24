@@ -40,7 +40,7 @@ public class VendorResourceTest {
             .email("create@vender.com")
             .name("Create Vendor")
             .phone("1234567890")
-            .ownerId(2L)
+            .managerId("2")
             .workers(Collections.singletonList(saveWorkerDto))
             .build();
 
@@ -60,7 +60,7 @@ public class VendorResourceTest {
     public void Post_WhenGivenAnInValidRequestToSave_ShouldReturnBadRequest() {
         // Arrange
         SaveVendorDto saveVendorDto = SaveVendorDto.builder()
-            .ownerId(1L)
+            .managerId("1")
             .build();
 
         // Act
@@ -121,7 +121,7 @@ public class VendorResourceTest {
         // Assert
         given()
             .when()
-            .get("/1/owner/2")
+            .get("/1/manager/2")
             .then()
             .statusCode(HttpStatus.SC_NO_CONTENT);
     }
@@ -134,10 +134,10 @@ public class VendorResourceTest {
         // Assert
         given()
             .when()
-            .get("/400/owner/500")
+            .get("/400/manager/500")
             .then()
             .statusCode(HttpStatus.SC_OK)
-            .body("ownerId", is(500),
+            .body("managerId", is("500"),
                 "addressId", is(600),
                 "name", is("First Vendor"),
                 "email", is("vendor@email.com"),
@@ -162,7 +162,7 @@ public class VendorResourceTest {
         // Assert
         given()
             .when()
-            .get("/owner/999?page=0&pageSize=10")
+            .get("/manager/999?page=0&pageSize=10")
             .then()
             .statusCode(HttpStatus.SC_OK)
             .body(is("[]"));
@@ -175,7 +175,7 @@ public class VendorResourceTest {
         // Act
         List<VendorDto> result = given()
             .when()
-            .get("/owner/500?page=0&pageSize=10&filterActiveWorkers=true")
+            .get("/manager/500?page=0&pageSize=10&filterActiveWorkers=true")
             .then()
             .statusCode(HttpStatus.SC_OK)
             .extract()
@@ -187,7 +187,7 @@ public class VendorResourceTest {
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(400L, result.get(0).getId());
-        assertEquals(500L, result.get(0).getOwnerId());
+        assertEquals("500", result.get(0).getManagerId());
         assertEquals(600L, result.get(0).getAddressId());
         assertEquals("First Vendor", result.get(0).getName());
         assertEquals("1234567890", result.get(0).getPhone());
@@ -208,7 +208,7 @@ public class VendorResourceTest {
         // Assert
         given()
             .when()
-            .get("/owner/123?page=0")
+            .get("/manager/123?page=0")
             .then()
             .statusCode(HttpStatus.SC_BAD_REQUEST);
     }

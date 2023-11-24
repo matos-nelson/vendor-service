@@ -39,18 +39,18 @@ public class VendorService {
         vendorRepository.persist(vendor);
     }
 
-    public VendorDto getVendor(Long vendorId, Long ownerId) {
-        Vendor vendor = vendorRepository.findVendor(vendorId, ownerId);
+    public VendorDto getVendor(Long vendorId, String managerId) {
+        Vendor vendor = vendorRepository.findVendor(vendorId, managerId);
         if (vendor == null) {
-            log.info("Could Not Find Vendor With Given Ids: VendorId {} OwnerId {}", vendorId, ownerId);
+            log.info("Could Not Find Vendor With Given Ids: VendorId {} ManagerId {}", vendorId, managerId);
             return null;
         }
 
         return vendorMapper.toDto(vendor);
     }
 
-    public List<VendorDto> getVendors(Long ownerId, boolean filterActiveWorkers, int page, int pageSize) {
-        List<Vendor> vendors = vendorRepository.findVendors(ownerId, filterActiveWorkers, page, pageSize);
+    public List<VendorDto> getVendors(String managerId, boolean filterActiveWorkers, int page, int pageSize) {
+        List<Vendor> vendors = vendorRepository.findVendors(managerId, filterActiveWorkers, page, pageSize);
         return vendorMapper.toDtoList(vendors);
     }
 }

@@ -27,7 +27,7 @@ public class VendorRepositoryTest {
         // Arrange
 
         // Act
-        Vendor result = vendorRepository.findVendor(123L, 456L);
+        Vendor result = vendorRepository.findVendor(123L, "456");
 
         // Assert
         assertNull(result);
@@ -39,7 +39,7 @@ public class VendorRepositoryTest {
         // Arrange
 
         // Act
-        Vendor result = vendorRepository.findVendor(400L, 500L);
+        Vendor result = vendorRepository.findVendor(400L, "500");
 
         // Assert
         assertNotNull(result);
@@ -51,7 +51,7 @@ public class VendorRepositoryTest {
         // Arrange
 
         // Act
-        List<Vendor> result = vendorRepository.findVendors(500L, false, 0, 10);
+        List<Vendor> result = vendorRepository.findVendors("500", false, 0, 10);
 
         // Assert
         assertNotNull(result);
@@ -65,7 +65,7 @@ public class VendorRepositoryTest {
         // Arrange
 
         // Act
-        List<Vendor> result = vendorRepository.findVendors(500L, false, 10, 10);
+        List<Vendor> result = vendorRepository.findVendors("500", false, 10, 10);
 
         // Assert
         assertNotNull(result);
@@ -78,7 +78,7 @@ public class VendorRepositoryTest {
         // Arrange
 
         // Act
-        List<Vendor> result = vendorRepository.findVendors(500L, true, 0, 10);
+        List<Vendor> result = vendorRepository.findVendors("500", true, 0, 10);
 
         // Assert
         assertNotNull(result);
@@ -92,7 +92,7 @@ public class VendorRepositoryTest {
         // Arrange
 
         // Act
-        List<Vendor> result = vendorRepository.findVendors(500L, false, 0, 10);
+        List<Vendor> result = vendorRepository.findVendors("500", false, 0, 10);
 
         // Assert
         assertNotNull(result);
