@@ -1,5 +1,6 @@
 package org.rent.circle.vendor.api.resource;
 
+import io.quarkus.security.Authenticated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -22,6 +23,7 @@ import org.rent.circle.vendor.api.dto.VendorDto;
 import org.rent.circle.vendor.api.service.VendorService;
 
 @AllArgsConstructor
+@Authenticated
 @Path("/vendor")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
