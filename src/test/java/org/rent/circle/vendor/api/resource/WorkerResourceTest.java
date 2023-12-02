@@ -7,15 +7,29 @@ import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.h2.H2DatabaseTestResource;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;
+import org.rent.circle.vendor.api.annotation.AuthUser;
 import org.rent.circle.vendor.api.dto.SaveWorkerDto;
 import org.rent.circle.vendor.api.dto.UpdateWorkerDto;
 
 @QuarkusTest
 @TestHTTPEndpoint(WorkerResource.class)
 @QuarkusTestResource(H2DatabaseTestResource.class)
+@AuthUser
 public class WorkerResourceTest {
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.METHOD})
+    @TestSecurity(user = "update_user")
+    public @interface UpdateWorkerUser {
+
+    }
 
     @Test
     public void Post_WhenGivenAnInValidRequestToSave_ShouldReturnBadRequest() {
@@ -35,6 +49,7 @@ public class WorkerResourceTest {
     }
 
     @Test
+    @UpdateWorkerUser
     public void Post_WhenGivenAValidRequestToSave_ShouldReturnSavedWorkerId() {
         // Arrange
         long vendorId = 100L;

@@ -21,17 +21,19 @@ public class VendorService {
     private final VendorMapper vendorMapper;
 
     @Transactional
-    public Long saveVendor(SaveVendorDto saveVendor) {
+    public Long saveVendor(SaveVendorDto saveVendor, String managerId) {
         Vendor vendor = vendorMapper.toModel(saveVendor);
+        vendor.setManagerId(managerId);
 
         vendorRepository.persist(vendor);
         return vendor.getId();
     }
 
     @Transactional
-    public void updateVendorInfo(Long vendorId, UpdateVendorDto updateVendorInfo) {
-        Vendor vendor = vendorRepository.findById(vendorId);
+    public void updateVendorInfo(Long vendorId, String managerId, UpdateVendorDto updateVendorInfo) {
+        Vendor vendor = vendorRepository.findVendor(vendorId, managerId);
         if (vendor == null) {
+            log.info("Could Not Find Vendor With Given Ids: VendorId {} ManagerId {}", vendorId, managerId);
             return;
         }
 

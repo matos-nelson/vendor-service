@@ -24,7 +24,7 @@ public class WorkerRepositoryTest {
         // Arrange
 
         // Act
-        Worker result = workerRepository.findWorker(123L, 456L);
+        Worker result = workerRepository.findWorker(123L, 456L, "invalid");
 
         // Assert
         assertNull(result);
@@ -36,7 +36,7 @@ public class WorkerRepositoryTest {
         // Arrange
 
         // Act
-        Worker result = workerRepository.findWorker(700L, 400L);
+        Worker result = workerRepository.findWorker(700L, 400L, "auth_user");
 
         // Assert
         assertNotNull(result);

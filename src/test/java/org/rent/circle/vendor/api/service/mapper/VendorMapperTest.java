@@ -42,7 +42,6 @@ public class VendorMapperTest {
             .email("create@vender.com")
             .name("Create Vendor")
             .phone("1234567890")
-            .managerId("2")
             .build();
 
         // Act
@@ -51,7 +50,6 @@ public class VendorMapperTest {
         // Assert
         assertNotNull(result);
         assertEquals(saveVendorDto.getAddressId(), result.getAddressId());
-        assertEquals(saveVendorDto.getManagerId(), result.getManagerId());
         assertEquals(saveVendorDto.getEmail(), result.getEmail());
         assertEquals(saveVendorDto.getName(), result.getName());
         assertEquals(saveVendorDto.getPhone(), result.getPhone());
@@ -71,7 +69,6 @@ public class VendorMapperTest {
             .email("create@vender.com")
             .name("Create Vendor")
             .phone("1234567890")
-            .managerId("2")
             .workers(Collections.singletonList(saveWorkerDto))
             .build();
 
@@ -81,7 +78,6 @@ public class VendorMapperTest {
         // Assert
         assertNotNull(result);
         assertEquals(saveVendorDto.getAddressId(), result.getAddressId());
-        assertEquals(saveVendorDto.getManagerId(), result.getManagerId());
         assertEquals(saveVendorDto.getEmail(), result.getEmail());
         assertEquals(saveVendorDto.getName(), result.getName());
         assertEquals(saveVendorDto.getPhone(), result.getPhone());
@@ -163,7 +159,6 @@ public class VendorMapperTest {
         assertNotNull(result);
         assertEquals(vendor.getId(), result.getId());
         assertEquals(vendor.getAddressId(), result.getAddressId());
-        assertEquals(vendor.getManagerId(), result.getManagerId());
         assertEquals(vendor.getEmail(), result.getEmail());
         assertEquals(vendor.getName(), result.getName());
         assertEquals(vendor.getPhone(), result.getPhone());
@@ -197,7 +192,6 @@ public class VendorMapperTest {
         assertNotNull(result);
         assertEquals(vendor.getId(), result.getId());
         assertEquals(vendor.getAddressId(), result.getAddressId());
-        assertEquals(vendor.getManagerId(), result.getManagerId());
         assertEquals(vendor.getEmail(), result.getEmail());
         assertEquals(vendor.getName(), result.getName());
         assertEquals(vendor.getPhone(), result.getPhone());
@@ -239,7 +233,6 @@ public class VendorMapperTest {
         assertEquals(1, result.size());
         assertEquals(vendor.getId(), result.get(0).getId());
         assertEquals(vendor.getAddressId(), result.get(0).getAddressId());
-        assertEquals(vendor.getManagerId(), result.get(0).getManagerId());
         assertEquals(vendor.getEmail(), result.get(0).getEmail());
         assertEquals(vendor.getName(), result.get(0).getName());
         assertEquals(vendor.getPhone(), result.get(0).getPhone());
@@ -274,7 +267,6 @@ public class VendorMapperTest {
         assertEquals(1, result.size());
         assertEquals(vendor.getId(), result.get(0).getId());
         assertEquals(vendor.getAddressId(), result.get(0).getAddressId());
-        assertEquals(vendor.getManagerId(), result.get(0).getManagerId());
         assertEquals(vendor.getEmail(), result.get(0).getEmail());
         assertEquals(vendor.getName(), result.get(0).getName());
         assertEquals(vendor.getPhone(), result.get(0).getPhone());

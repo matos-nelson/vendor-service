@@ -22,11 +22,11 @@ public class WorkerService {
     private final WorkerMapper workerMapper;
 
     @Transactional
-    public Long saveWorker(Long vendorId, SaveWorkerDto saveWorker) {
+    public Long saveWorker(Long vendorId, String managerId, SaveWorkerDto saveWorker) {
 
-        Vendor vendor = vendorRepository.findById(vendorId);
+        Vendor vendor = vendorRepository.findVendor(vendorId, managerId);
         if (vendor == null) {
-            log.info("Vendor Could Not Be Found With Id: {}", vendorId);
+            log.info("Vendor Could Not Be Found With Given Ids: VendorId {} ManagerId {} ", vendorId, managerId);
             return null;
         }
 
@@ -38,10 +38,11 @@ public class WorkerService {
     }
 
     @Transactional
-    public void updateWorkerInfo(Long workerId, Long vendorId, UpdateWorkerDto updateWorkerInfo) {
-        Worker worker = workerRepository.findWorker(workerId, vendorId);
+    public void updateWorkerInfo(Long workerId, Long vendorId, String managerId, UpdateWorkerDto updateWorkerInfo) {
+        Worker worker = workerRepository.findWorker(workerId, vendorId, managerId);
         if (worker == null) {
-            log.info("Worker Could Not Be Found With Given Worker Id {} and Vendor Id {}", workerId, vendorId);
+            log.info("Worker Could Not Be Found With Given Worker Id {} Vendor Id {} Manager Id {}", workerId, vendorId,
+                managerId);
             return;
         }
 

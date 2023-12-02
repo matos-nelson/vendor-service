@@ -1,10 +1,11 @@
 package org.rent.circle.vendor.api.resource;
 
+import com.mysql.cj.util.StringUtils;
 import io.quarkus.security.Authenticated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
@@ -17,6 +18,7 @@ import jakarta.ws.rs.core.MediaType;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.rent.circle.vendor.api.dto.SaveVendorDto;
 import org.rent.circle.vendor.api.dto.UpdateVendorDto;
 import org.rent.circle.vendor.api.dto.VendorDto;
@@ -31,32 +33,50 @@ import org.rent.circle.vendor.api.service.VendorService;
 public class VendorResource {
 
     private final VendorService vendorService;
+    private final JsonWebToken jwt;
 
     @POST
     public Long saveVendor(@Valid SaveVendorDto saveVendorDto) {
-        return vendorService.saveVendor(saveVendorDto);
+
+        if (StringUtils.isNullOrEmpty(jwt.getName())) {
+            throw new BadRequestException();
+        }
+
+        return vendorService.saveVendor(saveVendorDto, jwt.getName());
     }
 
     @PATCH
     @Path("/{id}")
     public void updateVendor(@NotNull @PathParam("id") long vendorId,
         @NotNull @Valid UpdateVendorDto updateVendorInfo) {
-        vendorService.updateVendorInfo(vendorId, updateVendorInfo);
+
+        String managerId = jwt.getName();
+        if (StringUtils.isNullOrEmpty(managerId)) {
+            throw new BadRequestException();
+        }
+        vendorService.updateVendorInfo(vendorId, managerId, updateVendorInfo);
     }
 
     @GET
-    @Path("/{id}/manager/{managerId}")
-    public VendorDto getVendor(@NotNull @PathParam("id") Long vendorId,
-        @NotBlank @PathParam("managerId") String managerId) {
+    @Path("/{id}")
+    public VendorDto getVendor(@NotNull @PathParam("id") Long vendorId) {
+
+        String managerId = jwt.getName();
+        if (StringUtils.isNullOrEmpty(managerId)) {
+            throw new BadRequestException();
+        }
         return vendorService.getVendor(vendorId, managerId);
     }
 
     @GET
-    @Path("/manager/{managerId}")
-    public List<VendorDto> getVendors(@NotBlank @PathParam("managerId") String managerId,
-        @NotNull @QueryParam("filterActiveWorkers") boolean filterActiveWorkers,
+    public List<VendorDto> getVendors(@NotNull @QueryParam("filterActiveWorkers") boolean filterActiveWorkers,
         @NotNull @QueryParam("page") @Min(0) Integer page,
         @NotNull @QueryParam("pageSize") @Min(1) Integer pageSize) {
+
+        String managerId = jwt.getName();
+        if (StringUtils.isNullOrEmpty(managerId)) {
+            throw new BadRequestException();
+        }
         return vendorService.getVendors(managerId, filterActiveWorkers, page, pageSize);
     }
 }

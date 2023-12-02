@@ -16,7 +16,6 @@ import lombok.Setter;
 public class VendorDto {
 
     private Long id;
-    private String managerId;
     private Long addressId;
     private String name;
     private String email;
