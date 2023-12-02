@@ -39,7 +39,7 @@ public class VendorRepositoryTest {
         // Arrange
 
         // Act
-        Vendor result = vendorRepository.findVendor(400L, "500");
+        Vendor result = vendorRepository.findVendor(400L, "auth_user");
 
         // Assert
         assertNotNull(result);
@@ -47,11 +47,11 @@ public class VendorRepositoryTest {
 
     @Test
     @TestTransaction
-    public void findVendors_WhenVendorsDoExist_ShouldReturnVendors() {
+    public void findVendors_WhenVendorDoExistWithWorkers_ShouldReturnVendorsWIthWorkers() {
         // Arrange
 
         // Act
-        List<Vendor> result = vendorRepository.findVendors("500", false, 0, 10);
+        List<Vendor> result = vendorRepository.findVendors("auth_user", false, 0, 10);
 
         // Assert
         assertNotNull(result);
@@ -65,7 +65,7 @@ public class VendorRepositoryTest {
         // Arrange
 
         // Act
-        List<Vendor> result = vendorRepository.findVendors("500", false, 10, 10);
+        List<Vendor> result = vendorRepository.findVendors("auth_user", false, 10, 10);
 
         // Assert
         assertNotNull(result);
@@ -78,7 +78,7 @@ public class VendorRepositoryTest {
         // Arrange
 
         // Act
-        List<Vendor> result = vendorRepository.findVendors("500", true, 0, 10);
+        List<Vendor> result = vendorRepository.findVendors("auth_user", true, 0, 10);
 
         // Assert
         assertNotNull(result);
@@ -92,7 +92,7 @@ public class VendorRepositoryTest {
         // Arrange
 
         // Act
-        List<Vendor> result = vendorRepository.findVendors("500", false, 0, 10);
+        List<Vendor> result = vendorRepository.findVendors("auth_user", false, 0, 10);
 
         // Assert
         assertNotNull(result);

@@ -40,11 +40,12 @@ public class WorkerServiceTest {
     public void saveWorker_WhenVendorCantBeFound_ShouldReturnNull() {
         // Arrange
         long vendorId = 1L;
+        String managerId = "2";
         SaveWorkerDto saveWorkerDto = SaveWorkerDto.builder().build();
-        when(vendorRepository.findById(vendorId)).thenReturn(null);
+        when(vendorRepository.findVendor(vendorId, managerId)).thenReturn(null);
 
         // Act
-        Long result = workerService.saveWorker(vendorId, saveWorkerDto);
+        Long result = workerService.saveWorker(vendorId, managerId, saveWorkerDto);
 
         // Assert
         assertNull(result);
@@ -56,6 +57,7 @@ public class WorkerServiceTest {
     public void saveWorker_WhenCalled_ShouldSaveWorker() {
         // Arrange
         long vendorId = 123L;
+        String managerId = "2";
 
         Vendor vendor = new Vendor();
         vendor.setId(vendorId);
@@ -65,11 +67,11 @@ public class WorkerServiceTest {
         worker.setId(100L);
 
         SaveWorkerDto saveWorkerDto = SaveWorkerDto.builder().build();
-        when(vendorRepository.findById(vendorId)).thenReturn(vendor);
+        when(vendorRepository.findVendor(vendorId, managerId)).thenReturn(vendor);
         when(workerMapper.toModel(saveWorkerDto)).thenReturn(worker);
 
         // Act
-        Long result = workerService.saveWorker(vendorId, saveWorkerDto);
+        Long result = workerService.saveWorker(vendorId, managerId, saveWorkerDto);
 
         // Assert
         assertNotNull(result);
@@ -81,11 +83,12 @@ public class WorkerServiceTest {
         // Arrange
         long workerId = 1L;
         long vendorId = 2L;
+        String managerId = "3";
         UpdateWorkerDto updateWorkerDto = UpdateWorkerDto.builder().build();
-        when(workerRepository.findWorker(workerId, vendorId)).thenReturn(null);
+        when(workerRepository.findWorker(workerId, vendorId, managerId)).thenReturn(null);
 
         // Act
-        workerService.updateWorkerInfo(workerId, vendorId, updateWorkerDto);
+        workerService.updateWorkerInfo(workerId, vendorId, managerId, updateWorkerDto);
 
         // Assert
         verify(workerMapper, never()).updateWorker(updateWorkerDto, null);
@@ -97,6 +100,7 @@ public class WorkerServiceTest {
         // Arrange
         Long workerId = 1L;
         Long vendorId = 2L;
+        String managerId = "3";
 
         Worker worker = new Worker();
         worker.setId(workerId);
@@ -107,10 +111,10 @@ public class WorkerServiceTest {
             .email("updated@email.com")
             .active(true)
             .build();
-        when(workerRepository.findWorker(workerId, vendorId)).thenReturn(worker);
+        when(workerRepository.findWorker(workerId, vendorId, managerId)).thenReturn(worker);
 
         // Act
-        workerService.updateWorkerInfo(workerId, vendorId, updateWorkerInfo);
+        workerService.updateWorkerInfo(workerId, vendorId, managerId, updateWorkerInfo);
 
         // Assert
         verify(workerMapper, times(1)).updateWorker(updateWorkerInfo, worker);

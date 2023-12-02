@@ -3,6 +3,7 @@ package org.rent.circle.vendor.api.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -12,6 +13,7 @@ import static org.mockito.Mockito.when;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import jakarta.validation.ConstraintViolationException;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -36,10 +38,21 @@ public class VendorServiceTest {
     VendorService vendorService;
 
     @Test
-    public void saveVendor_WhenCalled_ShouldReturnSavedVendorId() {
+    public void saveVendor_WhenGivenInvalidManagerId_ShouldThrowException() {
         // Arrange
         SaveVendorDto saveVendorDto = SaveVendorDto.builder()
-            .managerId("1")
+            .build();
+
+        // Act
+        // Assert
+        assertThrows(ConstraintViolationException.class, () -> vendorService.saveVendor(saveVendorDto, null));
+    }
+
+    @Test
+    public void saveVendor_WhenCalled_ShouldReturnSavedVendorId() {
+        // Arrange
+        String managerId = "1";
+        SaveVendorDto saveVendorDto = SaveVendorDto.builder()
             .build();
 
         Vendor vendor = new Vendor();
@@ -47,22 +60,24 @@ public class VendorServiceTest {
         when(vendorMapper.toModel(saveVendorDto)).thenReturn(vendor);
 
         // Act
-        Long result = vendorService.saveVendor(saveVendorDto);
+        Long result = vendorService.saveVendor(saveVendorDto, managerId);
 
         // Assert
         assertNotNull(result);
         assertEquals(vendor.getId(), result);
+        assertEquals(managerId, vendor.getManagerId());
     }
 
     @Test
     public void updateVendorInfo_WhenVendorIsNotFound_ShouldReturnNotUpdate() {
         // Arrange
         long vendorId = 1L;
+        String managerId = "2";
         UpdateVendorDto updateResidentDto = UpdateVendorDto.builder().build();
-        when(vendorRepository.findById(vendorId)).thenReturn(null);
+        when(vendorRepository.findVendor(vendorId, managerId)).thenReturn(null);
 
         // Act
-        vendorService.updateVendorInfo(vendorId, updateResidentDto);
+        vendorService.updateVendorInfo(vendorId, managerId, updateResidentDto);
 
         // Assert
         verify(vendorMapper, never()).updateVendor(updateResidentDto, null);
@@ -73,6 +88,7 @@ public class VendorServiceTest {
     public void updateVendorInfo_WhenCalled_ShouldUpdate() {
         // Arrange
         Long vendorId = 1L;
+        String managerId = "2";
 
         Vendor vendor = new Vendor();
         vendor.setId(vendorId);
@@ -82,10 +98,10 @@ public class VendorServiceTest {
             .phone("9876543210")
             .email("updated@email.com")
             .build();
-        when(vendorRepository.findById(vendorId)).thenReturn(vendor);
+        when(vendorRepository.findVendor(vendorId, managerId)).thenReturn(vendor);
 
         // Act
-        vendorService.updateVendorInfo(vendorId, updateVendorInfo);
+        vendorService.updateVendorInfo(vendorId, managerId, updateVendorInfo);
 
         // Assert
         verify(vendorMapper, times(1)).updateVendor(updateVendorInfo, vendor);
@@ -116,7 +132,6 @@ public class VendorServiceTest {
         vendor.setManagerId(managerId);
 
         VendorDto vendorDto = VendorDto.builder()
-            .managerId(managerId)
             .build();
         when(vendorRepository.findVendor(vendorId, managerId)).thenReturn(vendor);
         when(vendorMapper.toDto(vendor)).thenReturn(vendorDto);
@@ -126,7 +141,7 @@ public class VendorServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(vendorDto, result);
+        assertEquals(vendorDto.getId(), result.getId());
     }
 
     @Test

@@ -10,12 +10,18 @@ import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.h2.H2DatabaseTestResource;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import io.restassured.common.mapper.TypeRef;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.Collections;
 import java.util.List;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
+import org.rent.circle.vendor.api.annotation.AuthUser;
 import org.rent.circle.vendor.api.dto.SaveVendorDto;
 import org.rent.circle.vendor.api.dto.SaveWorkerDto;
 import org.rent.circle.vendor.api.dto.UpdateVendorDto;
@@ -24,7 +30,23 @@ import org.rent.circle.vendor.api.dto.VendorDto;
 @QuarkusTest
 @TestHTTPEndpoint(VendorResource.class)
 @QuarkusTestResource(H2DatabaseTestResource.class)
+@AuthUser
 public class VendorResourceTest {
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.METHOD})
+    @TestSecurity(user = "new_user")
+    public @interface NoVendorUser {
+
+    }
+
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.METHOD})
+    @TestSecurity(user = "update_user")
+    public @interface UpdateVendorUser {
+
+    }
 
     @Test
     public void Post_WhenGivenAValidRequestToSave_ShouldReturnSavedApplicationId() {
@@ -40,7 +62,6 @@ public class VendorResourceTest {
             .email("create@vender.com")
             .name("Create Vendor")
             .phone("1234567890")
-            .managerId("2")
             .workers(Collections.singletonList(saveWorkerDto))
             .build();
 
@@ -60,7 +81,6 @@ public class VendorResourceTest {
     public void Post_WhenGivenAnInValidRequestToSave_ShouldReturnBadRequest() {
         // Arrange
         SaveVendorDto saveVendorDto = SaveVendorDto.builder()
-            .managerId("1")
             .build();
 
         // Act
@@ -93,6 +113,7 @@ public class VendorResourceTest {
     }
 
     @Test
+    @UpdateVendorUser
     public void PATCH_WhenGivenAValidRequestToUpdateVendor_ShouldReturnNoContent() {
         // Arrange
         long vendorId = 100L;
@@ -111,9 +132,22 @@ public class VendorResourceTest {
             .patch("/" + vendorId)
             .then()
             .statusCode(HttpStatus.SC_NO_CONTENT);
+
+        given()
+            .when()
+            .get("/" + vendorId)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .body("addressId", is(300),
+                "name", is(updateVendorDto.getName()),
+                "email", is(updateVendorDto.getEmail()),
+                "phone", is(updateVendorDto.getPhone()),
+                "workers", is(Matchers.hasSize(0))
+            );
     }
 
     @Test
+    @NoVendorUser
     public void GET_WhenAVendorCantBeFound_ShouldReturnNoContent() {
         // Arrange
 
@@ -121,7 +155,7 @@ public class VendorResourceTest {
         // Assert
         given()
             .when()
-            .get("/1/manager/2")
+            .get("/1")
             .then()
             .statusCode(HttpStatus.SC_NO_CONTENT);
     }
@@ -134,11 +168,10 @@ public class VendorResourceTest {
         // Assert
         given()
             .when()
-            .get("/400/manager/500")
+            .get("/400")
             .then()
             .statusCode(HttpStatus.SC_OK)
-            .body("managerId", is("500"),
-                "addressId", is(600),
+            .body("addressId", is(600),
                 "name", is("First Vendor"),
                 "email", is("vendor@email.com"),
                 "phone", is("1234567890"),
@@ -155,6 +188,7 @@ public class VendorResourceTest {
     }
 
     @Test
+    @NoVendorUser
     public void GET_getVendors_WhenVendorsCantBeFound_ShouldReturnNoData() {
         // Arrange
 
@@ -162,7 +196,7 @@ public class VendorResourceTest {
         // Assert
         given()
             .when()
-            .get("/manager/999?page=0&pageSize=10")
+            .get("?page=0&pageSize=10")
             .then()
             .statusCode(HttpStatus.SC_OK)
             .body(is("[]"));
@@ -175,7 +209,7 @@ public class VendorResourceTest {
         // Act
         List<VendorDto> result = given()
             .when()
-            .get("/manager/500?page=0&pageSize=10&filterActiveWorkers=true")
+            .get("?page=0&pageSize=10&filterActiveWorkers=true")
             .then()
             .statusCode(HttpStatus.SC_OK)
             .extract()
@@ -187,7 +221,6 @@ public class VendorResourceTest {
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(400L, result.get(0).getId());
-        assertEquals("500", result.get(0).getManagerId());
         assertEquals(600L, result.get(0).getAddressId());
         assertEquals("First Vendor", result.get(0).getName());
         assertEquals("1234567890", result.get(0).getPhone());
@@ -208,7 +241,7 @@ public class VendorResourceTest {
         // Assert
         given()
             .when()
-            .get("/manager/123?page=0")
+            .get("?page=0")
             .then()
             .statusCode(HttpStatus.SC_BAD_REQUEST);
     }
