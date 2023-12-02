@@ -31,7 +31,7 @@ public class VendorService {
     }
 
     @Transactional
-    public void updateVendorInfo(Long vendorId, @NotBlank String managerId, UpdateVendorDto updateVendorInfo) {
+    public void updateVendorInfo(Long vendorId, String managerId, UpdateVendorDto updateVendorInfo) {
         Vendor vendor = vendorRepository.findVendor(vendorId, managerId);
         if (vendor == null) {
             log.info("Could Not Find Vendor With Given Ids: VendorId {} ManagerId {}", vendorId, managerId);

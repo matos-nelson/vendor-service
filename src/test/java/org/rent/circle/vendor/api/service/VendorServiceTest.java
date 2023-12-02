@@ -69,18 +69,6 @@ public class VendorServiceTest {
     }
 
     @Test
-    public void updateVendorInfo_WhenGivenAnInvalidManagerId_ShouldThrowException() {
-        // Arrange
-        long vendorId = 1L;
-        UpdateVendorDto updateResidentDto = UpdateVendorDto.builder().build();
-
-        // Act
-        // Assert
-        assertThrows(ConstraintViolationException.class, () ->
-            vendorService.updateVendorInfo(vendorId, null, updateResidentDto));
-    }
-
-    @Test
     public void updateVendorInfo_WhenVendorIsNotFound_ShouldReturnNotUpdate() {
         // Arrange
         long vendorId = 1L;
