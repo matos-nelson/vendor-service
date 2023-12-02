@@ -3,7 +3,6 @@ package org.rent.circle.vendor.api.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -13,7 +12,6 @@ import static org.mockito.Mockito.when;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
-import jakarta.validation.ConstraintViolationException;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -36,17 +34,6 @@ public class VendorServiceTest {
 
     @Inject
     VendorService vendorService;
-
-    @Test
-    public void saveVendor_WhenGivenInvalidManagerId_ShouldThrowException() {
-        // Arrange
-        SaveVendorDto saveVendorDto = SaveVendorDto.builder()
-            .build();
-
-        // Act
-        // Assert
-        assertThrows(ConstraintViolationException.class, () -> vendorService.saveVendor(saveVendorDto, null));
-    }
 
     @Test
     public void saveVendor_WhenCalled_ShouldReturnSavedVendorId() {

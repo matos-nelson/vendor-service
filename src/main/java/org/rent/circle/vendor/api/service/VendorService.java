@@ -2,7 +2,6 @@ package org.rent.circle.vendor.api.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
-import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +21,7 @@ public class VendorService {
     private final VendorMapper vendorMapper;
 
     @Transactional
-    public Long saveVendor(SaveVendorDto saveVendor, @NotBlank String managerId) {
+    public Long saveVendor(SaveVendorDto saveVendor, String managerId) {
         Vendor vendor = vendorMapper.toModel(saveVendor);
         vendor.setManagerId(managerId);
 
