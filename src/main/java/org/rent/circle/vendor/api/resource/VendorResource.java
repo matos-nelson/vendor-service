@@ -1,11 +1,9 @@
 package org.rent.circle.vendor.api.resource;
 
-import com.mysql.cj.util.StringUtils;
 import io.quarkus.security.Authenticated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
@@ -37,35 +35,19 @@ public class VendorResource {
 
     @POST
     public Long saveVendor(@Valid SaveVendorDto saveVendorDto) {
-
-        if (StringUtils.isNullOrEmpty(jwt.getName())) {
-            throw new BadRequestException();
-        }
-
         return vendorService.saveVendor(saveVendorDto, jwt.getName());
     }
 
     @PATCH
     @Path("/{id}")
-    public void updateVendor(@NotNull @PathParam("id") long vendorId,
-        @NotNull @Valid UpdateVendorDto updateVendorInfo) {
-
-        String managerId = jwt.getName();
-        if (StringUtils.isNullOrEmpty(managerId)) {
-            throw new BadRequestException();
-        }
-        vendorService.updateVendorInfo(vendorId, managerId, updateVendorInfo);
+    public void updateVendor(@NotNull @PathParam("id") long vendorId, @Valid UpdateVendorDto updateVendorInfo) {
+        vendorService.updateVendorInfo(vendorId, jwt.getName(), updateVendorInfo);
     }
 
     @GET
     @Path("/{id}")
     public VendorDto getVendor(@NotNull @PathParam("id") Long vendorId) {
-
-        String managerId = jwt.getName();
-        if (StringUtils.isNullOrEmpty(managerId)) {
-            throw new BadRequestException();
-        }
-        return vendorService.getVendor(vendorId, managerId);
+        return vendorService.getVendor(vendorId, jwt.getName());
     }
 
     @GET
@@ -73,10 +55,6 @@ public class VendorResource {
         @NotNull @QueryParam("page") @Min(0) Integer page,
         @NotNull @QueryParam("pageSize") @Min(1) Integer pageSize) {
 
-        String managerId = jwt.getName();
-        if (StringUtils.isNullOrEmpty(managerId)) {
-            throw new BadRequestException();
-        }
-        return vendorService.getVendors(managerId, filterActiveWorkers, page, pageSize);
+        return vendorService.getVendors(jwt.getName(), filterActiveWorkers, page, pageSize);
     }
 }

@@ -2,6 +2,7 @@ package org.rent.circle.vendor.api.service;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -10,6 +11,7 @@ import static org.mockito.Mockito.when;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import jakarta.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -35,6 +37,18 @@ public class WorkerServiceTest {
 
     @Inject
     WorkerService workerService;
+
+    @Test
+    public void saveWorker_WhenGivenInvalidManagerId_ShouldThrowException() {
+        // Arrange
+        long vendorId = 1L;
+        SaveWorkerDto saveWorkerDto = SaveWorkerDto.builder().build();
+
+        // Act
+        // Assert
+        assertThrows(ConstraintViolationException.class, () ->
+            workerService.saveWorker(vendorId, null, saveWorkerDto));
+    }
 
     @Test
     public void saveWorker_WhenVendorCantBeFound_ShouldReturnNull() {
@@ -76,6 +90,19 @@ public class WorkerServiceTest {
         // Assert
         assertNotNull(result);
         verify(workerRepository, times(1)).persist(worker);
+    }
+
+    @Test
+    public void updateWorkerInfo_WhenGivenInvalidManagerId_ShouldThrowException() {
+        // Arrange
+        long workerId = 1L;
+        long vendorId = 2L;
+        UpdateWorkerDto updateWorkerDto = UpdateWorkerDto.builder().build();
+
+        // Act
+        // Assert
+        assertThrows(ConstraintViolationException.class, () ->
+            workerService.updateWorkerInfo(workerId, vendorId, null, updateWorkerDto));
     }
 
     @Test

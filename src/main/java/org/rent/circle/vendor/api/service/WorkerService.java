@@ -2,6 +2,7 @@ package org.rent.circle.vendor.api.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.rent.circle.vendor.api.dto.SaveWorkerDto;
@@ -22,7 +23,7 @@ public class WorkerService {
     private final WorkerMapper workerMapper;
 
     @Transactional
-    public Long saveWorker(Long vendorId, String managerId, SaveWorkerDto saveWorker) {
+    public Long saveWorker(Long vendorId, @NotBlank String managerId, SaveWorkerDto saveWorker) {
 
         Vendor vendor = vendorRepository.findVendor(vendorId, managerId);
         if (vendor == null) {
@@ -38,7 +39,8 @@ public class WorkerService {
     }
 
     @Transactional
-    public void updateWorkerInfo(Long workerId, Long vendorId, String managerId, UpdateWorkerDto updateWorkerInfo) {
+    public void updateWorkerInfo(Long workerId, Long vendorId, @NotBlank String managerId,
+        UpdateWorkerDto updateWorkerInfo) {
         Worker worker = workerRepository.findWorker(workerId, vendorId, managerId);
         if (worker == null) {
             log.info("Worker Could Not Be Found With Given Worker Id {} Vendor Id {} Manager Id {}", workerId, vendorId,

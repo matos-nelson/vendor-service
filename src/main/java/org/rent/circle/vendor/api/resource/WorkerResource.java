@@ -1,10 +1,8 @@
 package org.rent.circle.vendor.api.resource;
 
-import io.quarkus.runtime.util.StringUtil;
 import io.quarkus.security.Authenticated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
@@ -33,23 +31,13 @@ public class WorkerResource {
     @POST
     @Path("/vendor/{vendorId}")
     public Long saveWorker(@NotNull @PathParam("vendorId") long vendorId, @Valid SaveWorkerDto saveWorkerDto) {
-
-        String managerId = jwt.getName();
-        if (StringUtil.isNullOrEmpty(managerId)) {
-            throw new BadRequestException();
-        }
-        return workerService.saveWorker(vendorId, managerId, saveWorkerDto);
+        return workerService.saveWorker(vendorId, jwt.getName(), saveWorkerDto);
     }
 
     @PATCH
     @Path("/{id}/vendor/{vendorId}")
-    public void updateWorker(@NotNull @PathParam("id") long workerId, @NotNull @PathParam("vendorId") long vendorId,
-        @NotNull @Valid UpdateWorkerDto updateWorkerInfo) {
-
-        String managerId = jwt.getName();
-        if (StringUtil.isNullOrEmpty(managerId)) {
-            throw new BadRequestException();
-        }
-        workerService.updateWorkerInfo(workerId, vendorId, managerId, updateWorkerInfo);
+    public void updateWorker(@NotNull @PathParam("id") Long workerId, @NotNull @PathParam("vendorId") Long vendorId,
+        @Valid UpdateWorkerDto updateWorkerInfo) {
+        workerService.updateWorkerInfo(workerId, vendorId, jwt.getName(), updateWorkerInfo);
     }
 }
