@@ -13,6 +13,10 @@ A few environment variables need to be defined in order to run the application.
 - DB_URL: Url for database
 - ISSUER_PROJECT_ID: ID for issuing tokens
 
+## Auth
+This service requires a jwt to be passed in requests that require auth. The header to be used is defined in
+application.properties.
+
 ## Running the application in dev mode
 
 You can run your application in dev mode that enables live coding using:
